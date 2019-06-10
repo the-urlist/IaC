@@ -135,7 +135,6 @@ do
     then
         echo "        found parameter cosmosRegion"
         foundCosmosRegion=true;
-    fi
     elif [ "$var" = "-cosmosContainerName" ];
     then
         echo "        found parameter cosmosContainerName"
