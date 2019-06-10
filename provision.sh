@@ -61,7 +61,7 @@ do
         echo "        setting value for indexDocumentName: $var"
         indexDocumentName=$var
         foundIndexDocumentName=false
-    elif [ $foundCosmosAccountName= true ];
+    elif [ $foundCosmosAccountName = true ];
     then
         echo "        setting value for cosmosAccountName: $var"
         cosmosAccountName=$var
