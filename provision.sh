@@ -11,6 +11,11 @@ foundStorageAccountRegion=false
 foundStorageAccountSku=false
 foundErrorDocumentName=false
 foundIndexDocumentName=false
+foundCosmosAccountName=false
+foundCosmosRegion=false
+foundCosmosDbName=false
+foundCosmosContainerName=false
+foundCosmosThroughput=false
 for var in "$@"
 do
     echo "    param: $var"
@@ -56,6 +61,36 @@ do
         echo "        setting value for indexDocumentName: $var"
         indexDocumentName=$var
         foundIndexDocumentName=false
+    elif [ $foundCosmosAccountName= true ];
+    then
+        echo "        setting value for cosmosAccountName: $var"
+        cosmosAccountName=$var
+        foundCosmosAccountName=false
+    elif [ $foundCosmosRegion = true ];
+    then
+        echo "        setting value for cosmosRegion: $var"
+        cosmosRegion=$var
+        foundCosmosRegion=false
+    elif [ $foundCosmosDbName = true ];
+    then
+        echo "        setting value for cosmosDbName: $var"
+        cosmoscosmosDbNameRegion=$var
+        foundCosmosDbName=false
+    elif [ $foundCosmosDbName = true ];
+    then
+        echo "        setting value for cosmosDbName: $var"
+        cosmoscosmosDbNameRegion=$var
+        foundCosmosDbName=false
+    elif [ $foundCosmosContainerName = true ];
+    then
+        echo "        setting value for cosmosContainerName: $var"
+        cosmosContainerName=$var
+        foundCosmosContainerName=false
+    elif [ $foundCosmosThroughput = true ];
+    then
+        echo "        setting value for cosmosThroughput: $var"
+        cosmosThroughput=$var
+        foundCosmosThroughput=false
     fi
 
 
@@ -92,6 +127,23 @@ do
     then
         echo "        found parameter indexDocumentName"
         foundIndexDocumentName=true;
+    elif [ "$var" = "-cosmosAccountName" ];
+    then
+        echo "        found parameter cosmosAccountName"
+        foundCosmosAccountName=true;
+    elif [ "$var" = "-cosmosRegion" ];
+    then
+        echo "        found parameter cosmosRegion"
+        foundCosmosRegion=true;
+    fi
+    elif [ "$var" = "-cosmosContainerName" ];
+    then
+        echo "        found parameter cosmosContainerName"
+        foundCosmosContainerName=true;
+    elif [ "$var" = "-cosmosThroughput" ];
+    then
+        echo "        found parameter cosmosThroughput"
+        foundCosmosThroughput=true;
     fi
 done
 echo
@@ -99,25 +151,68 @@ echo
 # This Sets the subscription identified to be default subscription 
 #
 echo "Setting default subscription for Azure CLI: $subscriptionName"
-az account set --subscription $subscriptionName
+az account set \
+    --subscription $subscriptionName
 echo
 
 # This creates the resource group used to house all of the URList application
 #
 echo "Creating resource group $resourceGroupName in region $resourceGroupRegion"
-az group create --name $resourceGroupName --location $resourceGroupRegion
+az group create \
+    --name $resourceGroupName \
+    --location $resourceGroupRegion
 echo
 
 # This creates a storage account to host our static web site
 #
 echo "Creating storage account $storageAccountName in resource group $resourceGroupName"
-az storage account create --location $storageAccountRegion --name $storageAccountName --resource-group $resourceGroupName --sku "$storageAccountSku" --kind StorageV2
+az storage account create \
+    --location $storageAccountRegion \
+    --name $storageAccountName \
+    --resource-group $resourceGroupName \
+    --sku "$storageAccountSku" \
+    --kind StorageV2
 echo
 
 # This sets the storage account so it can host a static website
 #
 echo "Enabling static website hosting in storage account $storageAccountName"
-az extension add --name storage-preview
-az storage blob service-properties update --account-name $storageAccountName --static-website --404-document $errorDocumentName --index-document $indexDocumentName
+az extension add \
+    --name storage-preview
 
-# This sets the 
+az storage blob service-properties update \
+    --account-name $storageAccountName \
+    --static-website \
+    --404-document $errorDocumentName \
+    --index-document $indexDocumentName
+echo
+
+# this create a SQL API Cosmos DB account with session consistency and multi-master 
+# enabled
+#
+az cosmosdb create \
+    --name $cosmosAccountName \
+    --kind GlobalDocumentDB \
+    --locations "South Central US"=0 "North Central US"=1 \
+    --resource-group $resourceGroupName \
+    --default-consistency-level "Session" \
+    --enable-multiple-write-locations true
+echo
+
+# This creates a database for urlist 
+#
+az cosmosdb database create \
+    --name $cosmosAccountName \
+    --db-name $cosmosDbName \
+    --resource-group $resourceGroupName
+echo
+
+# this creates a fixed-size container and 400 RU/s
+#
+az cosmosdb collection create \
+    --resource-group $resourceGroupName \
+    --collection-name $cosmosContainerName \
+    --name $cosmosAccountName \
+    --db-name $cosmosDbName \
+    --throughput $cosmosThroughput
+echo
