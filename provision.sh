@@ -215,5 +215,6 @@ az cosmosdb collection create \
     --collection-name $cosmosContainerName \
     --name $cosmosAccountName \
     --db-name $cosmosDbName \
-    --throughput $cosmosThroughput
+    --throughput $cosmosThroughput \
+    --partition-key-path /vanityUrl
 echo
