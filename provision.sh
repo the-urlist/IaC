@@ -74,12 +74,7 @@ do
     elif [ $foundCosmosDbName = true ];
     then
         echo "        setting value for cosmosDbName: $var"
-        cosmoscosmosDbNameRegion=$var
-        foundCosmosDbName=false
-    elif [ $foundCosmosDbName = true ];
-    then
-        echo "        setting value for cosmosDbName: $var"
-        cosmoscosmosDbNameRegion=$var
+        cosmosDbName=$var
         foundCosmosDbName=false
     elif [ $foundCosmosContainerName = true ];
     then
@@ -135,6 +130,10 @@ do
     then
         echo "        found parameter cosmosRegion"
         foundCosmosRegion=true;
+    elif [ "$var" = "-cosmosDbName" ];
+    then
+        echo "        found parameter cosmosDbName"
+        foundCosmosDbName=true;
     elif [ "$var" = "-cosmosContainerName" ];
     then
         echo "        found parameter cosmosContainerName"
@@ -189,6 +188,7 @@ echo
 # this create a SQL API Cosmos DB account with session consistency and multi-master 
 # enabled
 #
+echo "creating cosmos db with session consistency and multi-master"
 az cosmosdb create \
     --name $cosmosAccountName \
     --kind GlobalDocumentDB \
@@ -200,6 +200,7 @@ echo
 
 # This creates a database for urlist 
 #
+echo "create the db for urlist in cosmos"
 az cosmosdb database create \
     --name $cosmosAccountName \
     --db-name $cosmosDbName \
@@ -208,6 +209,7 @@ echo
 
 # this creates a fixed-size container and 400 RU/s
 #
+echo "create a fixed size container and 400 RU/s"
 az cosmosdb collection create \
     --resource-group $resourceGroupName \
     --collection-name $cosmosContainerName \
