@@ -198,9 +198,10 @@ az cosmosdb create \
     --enable-multiple-write-locations true
 echo
 
-# This creates a database for urlist 
+# This checks to see if the database exists in cosmos, if not, it creates a 
+# database for urlist, otherwise does nothing 
 #
-echo "create the db for urlist in cosmos"
+echo "create the db $cosmosDbName for urlist in cosmos"
 isDbCreated="$(az cosmosdb database exists --resource-group-name $resourceGroupName --name $cosmosAccountName --db-name $cosmosDbName)"
 if [ $isDbCreated = true ] ;
 then 
@@ -217,11 +218,18 @@ fi
 # this creates a fixed-size container and 400 RU/s
 #
 echo "create a fixed size container and 400 RU/s"
-az cosmosdb collection create \
-    --resource-group $resourceGroupName \
-    --collection-name $cosmosContainerName \
-    --name $cosmosAccountName \
-    --db-name $cosmosDbName \
-    --throughput $cosmosThroughput \
-    --partition-key-path /vanityUrl
+isCollectionCreated="$(az cosmosdb collection exists --db-name $cosmosDbName --collection-name $cosmosContainerName --resource-group-name $resourceGroupName --name $cosmosAccountName)"
+if [ $isDbCreated = true ] ;
+then 
+    echo "    container $ $cosmosContainerName already exits"
+else
+    echo "    container $ $cosmosContainerName does not exist, creating..."
+    az cosmosdb collection create \
+        --resource-group $resourceGroupName \
+        --collection-name $cosmosContainerName \
+        --name $cosmosAccountName \
+        --db-name $cosmosDbName \
+        --throughput $cosmosThroughput \
+        --partition-key-path /vanityUrl
+fi
 echo
