@@ -202,7 +202,7 @@ echo
 #
 echo "create the db for urlist in cosmos"
 isDbCreated="$(az cosmosdb database exists --resource-group-name $resourceGroupName --name $cosmosAccountName --db-name $cosmosDbName)"
-if [ $foundResoisDbCreatedurceGroupName = true ] ;
+if [ $isDbCreated = true ] ;
 then 
     echo "    db $cosmosDbName already exits"
 else
