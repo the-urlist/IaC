@@ -1,17 +1,3 @@
-# Testing out getting param flags from command line
-while getopts resourceGroupName:subscriptionName:resourceGroupRegion option
-do
-    case "${option}"
-    in
-        resourceGroupName) resourceGroupName=${OPTARG};;
-        subscriptionName) subscriptionName=${OPTARG};;
-        resourceGroupRegion) resourceGroupRegion=${OPTARG};;
-    esac
-done
-echo "resource group name: $resourceGroupName"
-echo "subscriptionName: $subscriptionName"
-echo "resourceGroupRegion: $resourceGroupRegion"
-
 # This processes all the command line arguments and sets them to the appropriate variable so
 # all variables will be ready to be used in the rest of the script
 #
@@ -327,5 +313,5 @@ az functionapp create \
     --consumption-plan-location $functionConsumptionPlanRegion \
     --name $functionName \
     --storage-account $functionStorageAccountName \
-    --runtime $foundFunctionRuntime
+    --runtime $functionRuntime
 echo
