@@ -201,11 +201,18 @@ echo
 # This creates a database for urlist 
 #
 echo "create the db for urlist in cosmos"
-az cosmosdb database create \
-    --name $cosmosAccountName \
-    --db-name $cosmosDbName \
-    --resource-group $resourceGroupName
-echo
+isDbCreated="$(az cosmosdb database exists --resource-group-name $resourceGroupName --name $cosmosAccountName --db-name $cosmosDbName)"
+if [ $foundResoisDbCreatedurceGroupName = true ] ;
+then 
+    echo "    db $cosmosDbName already exits"
+else
+    echo "    db $cosmosDbName does not exist, creating..."
+    az cosmosdb database create \
+        --name $cosmosAccountName \
+        --db-name $cosmosDbName \
+        --resource-group $resourceGroupName
+    echo
+fi
 
 # this creates a fixed-size container and 400 RU/s
 #
