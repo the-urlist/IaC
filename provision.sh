@@ -16,6 +16,9 @@ foundCosmosRegion=false
 foundCosmosDbName=false
 foundCosmosContainerName=false
 foundCosmosThroughput=false
+foundFunctionStorageAccountRegion=false
+foundFunctionStorageAccountName=false
+foundFunctionStorageAccountSku=false
 for var in "$@"
 do
     echo "    param: $var"
@@ -86,6 +89,21 @@ do
         echo "        setting value for cosmosThroughput: $var"
         cosmosThroughput=$var
         foundCosmosThroughput=false
+    elif [ $foundFunctionStorageAccountRegion = true ];
+    then
+        echo "        setting value for functionStorageAccountRegion: $var"
+        functionStorageAccountRegion=$var
+        foundFunctionStorageAccountRegion=false
+    elif [ $foundFunctionStorageAccountName = true ];
+    then
+        echo "        setting value for functionStorageAccountName: $var"
+        functionStorageAccountName=$var
+        foundFunctionStorageAccountName=false
+    elif [ $foundFunctionStorageAccountSku = true ];
+    then
+        echo "        setting value for functionStorageAccountSku: $var"
+        functionStorageAccountSku=$var
+        foundFunctionStorageAccountSku=false
     fi
 
 
@@ -93,11 +111,11 @@ do
     if [ "$var" = "-resourceGroupName" ]; 
     then
         echo "        found parameter resourceGroupName"
-        foundResourceGroupName=true;
+        foundResourceGroupName=true
     elif [ "$var" = "-subscriptionName" ];
     then
         echo "        found parameter subscriptionName"
-        foundSubscriptionName=true;
+        foundSubscriptionName=true
     elif [ "$var" = "-resourceGroupRegion" ];
     then
         echo "        found parameter resourceGroupRegion"
@@ -105,11 +123,11 @@ do
     elif [ "$var" = "-storageAccountName" ];
     then
         echo "        found parameter storageAccountName"
-        foundStorageAccountName=true;
+        foundStorageAccountName=true
     elif [ "$var" = "-storageAccountRegion" ];
     then
         echo "        found parameter storageAccountRegion"
-        foundStorageAccountRegion=true;
+        foundStorageAccountRegion=true
     elif [ "$var" = "-storageAccountSku" ];
     then
         echo "        found parameter storageAccountSku"
@@ -117,7 +135,7 @@ do
     elif [ "$var" = "-errorDocumentName" ];
     then
         echo "        found parameter errorDocumentName"
-        foundErrorDocumentName=true;
+        foundErrorDocumentName=true
     elif [ "$var" = "-indexDocumentName" ];
     then
         echo "        found parameter indexDocumentName"
@@ -129,19 +147,31 @@ do
     elif [ "$var" = "-cosmosRegion" ];
     then
         echo "        found parameter cosmosRegion"
-        foundCosmosRegion=true;
+        foundCosmosRegion=true
     elif [ "$var" = "-cosmosDbName" ];
     then
         echo "        found parameter cosmosDbName"
-        foundCosmosDbName=true;
+        foundCosmosDbName=true
     elif [ "$var" = "-cosmosContainerName" ];
     then
         echo "        found parameter cosmosContainerName"
-        foundCosmosContainerName=true;
+        foundCosmosContainerName=true
     elif [ "$var" = "-cosmosThroughput" ];
     then
         echo "        found parameter cosmosThroughput"
-        foundCosmosThroughput=true;
+        foundCosmosThroughput=true
+    elif [ "$var" = "-functionStorageAccountRegion" ];
+    then
+        echo "        found parameter functionStorageAccountRegion"
+        foundFunctionStorageAccountRegion=true
+    elif [ "$var" = "-functionStorageAccountName" ];
+    then
+        echo "        found parameter functionStorageAccountName"
+        foundFunctionStorageAccountName=true
+    elif [ "$var" = "-functionStorageAccountSku" ];
+    then
+        echo "        found parameter functionStorageAccountSku"
+        foundFunctionStorageAccountSku=true
     fi
 done
 echo
@@ -232,4 +262,15 @@ else
         --throughput $cosmosThroughput \
         --partition-key-path /vanityUrl
 fi
+echo
+
+# this creates a storage account for our back end azure function to maintain
+# state and other info for the function
+# 
+echo "create a storage account for function to maintain state and other info for the function"
+az storage account create \
+    --name $functionStorageAccountName \
+    --location $functionStorageAccountRegion \
+    --resource-group $resourceGroupName \
+    --sku $functionStorageAccountSku
 echo
