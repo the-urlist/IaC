@@ -1,3 +1,17 @@
+# Testing out getting param flags from command line
+while getopts resourceGroupName:subscriptionName:resourceGroupRegion option
+do
+    case "${option}"
+    in
+        resourceGroupName) resourceGroupName=${OPTARG};;
+        subscriptionName) subscriptionName=${OPTARG};;
+        resourceGroupRegion) resourceGroupRegion=${OPTARG};;
+    esac
+done
+echo "resource group name: $resourceGroupName"
+echo "subscriptionName: $subscriptionName"
+echo "resourceGroupRegion: $resourceGroupRegion"
+
 # This processes all the command line arguments and sets them to the appropriate variable so
 # all variables will be ready to be used in the rest of the script
 #
@@ -19,6 +33,9 @@ foundCosmosThroughput=false
 foundFunctionStorageAccountRegion=false
 foundFunctionStorageAccountName=false
 foundFunctionStorageAccountSku=false
+foundFunctionConsumptionPlanRegion=false
+foundFunctionName=false
+foundFunctionRuntime=false
 for var in "$@"
 do
     echo "    param: $var"
@@ -104,6 +121,21 @@ do
         echo "        setting value for functionStorageAccountSku: $var"
         functionStorageAccountSku=$var
         foundFunctionStorageAccountSku=false
+    elif [ $foundFunctionConsumptionPlanRegion = true ];
+    then
+        echo "        setting value for functionConsumptionPlanRegion: $var"
+        functionConsumptionPlanRegion=$var
+        foundFunctionConsumptionPlanRegion=false
+    elif [ $foundFunctionName = true ];
+    then
+        echo "        setting value for functionName: $var"
+        functionName=$var
+        foundFunctionName=false
+    elif [ $foundFunctionRuntime = true ];
+    then
+        echo "        setting value for functionRuntime: $var"
+        functionRuntime=$var
+        foundFunctionRuntime=false
     fi
 
 
@@ -172,6 +204,18 @@ do
     then
         echo "        found parameter functionStorageAccountSku"
         foundFunctionStorageAccountSku=true
+    elif [ "$var" = "-functionConsumptionPlanRegion" ];
+    then
+        echo "        found parameter functionConsumptionPlanRegion"
+        foundFunctionConsumptionPlanRegion=true
+    elif [ "$var" = "-functionName" ];
+    then
+        echo "        found parameter functionName"
+        foundFunctionName=true
+    elif [ "$var" = "-functionRuntime" ];
+    then
+        echo "        found parameter functionRuntime"
+        foundFunctionRuntime=true
     fi
 done
 echo
@@ -273,4 +317,15 @@ az storage account create \
     --location $functionStorageAccountRegion \
     --resource-group $resourceGroupName \
     --sku $functionStorageAccountSku
+echo
+
+# this creates the function app used to host the back end function
+#
+echo "create the function app for the back end "
+az functionapp create \
+    --resource-group $resourceGroupName \
+    --consumption-plan-location $functionConsumptionPlanRegion \
+    --name $functionName \
+    --storage-account $functionStorageAccountName \
+    --runtime $foundFunctionRuntime
 echo
