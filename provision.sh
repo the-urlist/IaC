@@ -1,7 +1,7 @@
 # This processes all the command line arguments and sets them to the appropriate variable so
 # all variables will be ready to be used in the rest of the script
 #
-echo "Checking environment variable for resource group: $resourceGroup"
+echo "Checking environment variable for resource group: $resourceGroupName"
 echo "Iterating through parameters..."
 echo "Number of parameters passed in: $#"
 foundResourceGroupName=false
