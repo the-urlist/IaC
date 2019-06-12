@@ -40,6 +40,10 @@ functionName=$FUNCTIONNAME
 echo "    functionName: $functionName"
 functionRuntime=$FUNCTIONRUNTIME
 echo "    functionRuntime: $functionRuntime"
+twitterConsumerKey=$TWITTERCONSUMERKEY
+echo "    twitterConsumerKey: $twitterConsumerKey"
+twitterConsumerSecret=$TWITTERCONSUMERSECRET
+echo "    twitterConsumerSecret: $twitterConsumerSecret"
 echo
 
 # This Sets the subscription identified to be default subscription 
@@ -160,6 +164,6 @@ az webapp auth update \
     --resource-group $resourceGroupName \
     --enabled true \
     --action LoginWithTwitter \
-    --twitter-consumer-key $TWITTERCONSUMERKEY \
-    --twitter-consumer-secret $TWITTERCONSUMERSECRET
+    --twitter-consumer-key $twitterConsumerKey \
+    --twitter-consumer-secret $twitterConsumerSecret
 echo
