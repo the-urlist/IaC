@@ -1,6 +1,7 @@
 # This processes all the command line arguments and sets them to the appropriate variable so
 # all variables will be ready to be used in the rest of the script
 #
+echo "Checking environment variable for resource group: $resourceGroup"
 echo "Iterating through parameters..."
 echo "Number of parameters passed in: $#"
 foundResourceGroupName=false
@@ -314,4 +315,16 @@ az functionapp create \
     --name $functionName \
     --storage-account $functionStorageAccountName \
     --runtime $functionRuntime
+echo
+
+# this sets authentication to be on and to use twitter for the back end
+# function
+#
+az webapp auth update \
+    --name theurlistfunction \
+    --resource-group the-urlist-serverless-abel3 \
+    --enabled true \
+    --action LoginWithTwitter \
+    --twitter-consumer-key KsXcWMh9TIbuz3KyzoL1vWCrY \
+    --twitter-consumer-secret hGy2Kw6cKqSiIBNPBVRjJAb5VZYtE8ZamB13mnojUVCUQ5EDua
 echo
