@@ -1,88 +1,44 @@
-# The variables in pipelines are set as environment variables. This gets those environment
-# variables and sets them as local variables ready to be used in the rest of the script
+# The variables used in the this script are passed in as environment variables by
+# Azure Pipelines
 #
-echo "Gathering pipeline variables"
-resourceGroupName=$RESOURCEGROUPNAME
-echo "    resourceGroupName: $resourceGroupName"
-subscriptionName=$SUBSCRIPTIONNAME
-echo "    subscriptionName: $subscriptionName"
-resourceGroupRegion=$RESOURCEGROUPREGION
-echo "    resourceGroupRegion: $resourceGroupRegion"
-storageAccountRegion=$STORAGEACCOUNTREGION
-echo "    storageAccountRegion: $storageAccountRegion"
-storageAccountName=$STORAGEACCOUNTNAME
-echo "    storageAccountName: $storageAccountName"
-storageAccountSku=$STORAGEACCOUNTSKU
-echo "    storageAccountSku: $storageAccountSku"
-errorDocumentName=$ERRORDOCUMENTNAME
-echo "    errorDocumentName: $errorDocumentName"
-indexDocumentName=$INDEXDOCUMENTNAME
-echo "    indexDocumentName: $indexDocumentName"
-cosmosAccountName=$COSMOSACCOUNTNAME
-echo "    cosmosAccountName: $cosmosAccountName"
-cosmosRegion=$COSMOSREGION
-echo "    cosmosRegion: $cosmosRegion"
-cosmosDbName=$COSMOSDBNAME
-echo "    cosmosDbName: $cosmosDbName"
-cosmosContainerName=$COSMOSCONTAINERNAME
-echo "    cosmosContainerName: $cosmosContainerName"
-cosmosThroughput=$COSMOSTHROUGHPUT
-echo "    cosmosThroughput: $cosmosThroughput"
-functionStorageAccountRegion=$FUNCTIONSTORAGEACCOUNTREGION
-echo "    functionStorageAccountRegion: $functionStorageAccountRegion"
-functionStorageAccountName=$FUNCTIONSTORAGEACCOUNTNAME
-echo "    functionStorageAccountName: $functionStorageAccountName"
-functionStorageAccountSku=$FUNCTIONSTORAGEACCOUNTSKU
-echo "    functionStorageAccountSku: $functionStorageAccountSku"
-functionConsumptionPlanRegion=$FUNCTIONCONSUMPTIONPLANREGION
-echo "    functionConsumptionPlanRegion: $functionConsumptionPlanRegion"
-functionName=$FUNCTIONNAME
-echo "    functionName: $functionName"
-functionRuntime=$FUNCTIONRUNTIME
-echo "    functionRuntime: $functionRuntime"
-twitterConsumerKey=$TWITTERCONSUMERKEY
-echo "    twitterConsumerKey: $twitterConsumerKey"
-twitterConsumerSecret=$TWITTERCONSUMERSECRET
-echo "    twitterConsumerSecret: $twitterConsumerSecret"
-echo
 
 # This Sets the subscription identified to be default subscription 
 #
-echo "Setting default subscription for Azure CLI: $subscriptionName"
+echo "Setting default subscription for Azure CLI: $SUBSCRIPTIONNAME"
 az account set \
-    --subscription $subscriptionName
+    --subscription $SUBSCRIPTIONNAME
 echo
 
 # This creates the resource group used to house all of the URList application
 #
-echo "Creating resource group $resourceGroupName in region $resourceGroupRegion"
+echo "Creating resource group $RESOURCEGROUPNAME in region $RESOURCEGROUPREGION"
 az group create \
-    --name $resourceGroupName \
-    --location $resourceGroupRegion
+    --name $RESOURCEGROUPNAME \
+    --location $RESOURCEGROUPREGION
 echo
 
 # This creates a storage account to host our static web site
 #
-echo "Creating storage account $storageAccountName in resource group $resourceGroupName"
+echo "Creating storage account $STORAGEACCOUNTNAME in resource group $RESOURCEGROUPNAME"
 az storage account create \
-    --location $storageAccountRegion \
-    --name $storageAccountName \
-    --resource-group $resourceGroupName \
-    --sku "$storageAccountSku" \
+    --location $STORAGEACCOUNTREGION \
+    --name $STORAGEACCOUNTNAME \
+    --resource-group $RESOURCEGROUPNAME \
+    --sku "$STORAGEACCOUNTSKU" \
     --kind StorageV2
 echo
 
 # This sets the storage account so it can host a static website
 #
-echo "Enabling static website hosting in storage account $storageAccountName"
+echo "Enabling static website hosting in storage account $STORAGEACCOUNTNAME"
 az extension add \
     --name storage-preview
 
 az storage blob service-properties update \
-    --account-name $storageAccountName \
+    --account-name $STORAGEACCOUNTNAME \
     --static-website \
-    --404-document $errorDocumentName \
-    --index-document $indexDocumentName
+    --404-document $ERRORDOCUMENTNAME \
+    --index-document $INDEXDOCUMENTNAME
 echo
 
 # this create a SQL API Cosmos DB account with session consistency and multi-master 
@@ -90,10 +46,10 @@ echo
 #
 echo "creating cosmos db with session consistency and multi-master"
 az cosmosdb create \
-    --name $cosmosAccountName \
+    --name $COSMOSACCOUNTNAME \
     --kind GlobalDocumentDB \
     --locations "South Central US"=0 "North Central US"=1 \
-    --resource-group $resourceGroupName \
+    --resource-group $RESOURCEGROUPNAME \
     --default-consistency-level "Session" \
     --enable-multiple-write-locations true
 echo
@@ -101,35 +57,35 @@ echo
 # This checks to see if the database exists in cosmos, if not, it creates a 
 # database for urlist, otherwise does nothing 
 #
-echo "create the db $cosmosDbName for urlist in cosmos"
-isDbCreated="$(az cosmosdb database exists --resource-group-name $resourceGroupName --name $cosmosAccountName --db-name $cosmosDbName)"
+echo "create the db $COSMOSDBNAME for urlist in cosmos"
+isDbCreated="$(az cosmosdb database exists --resource-group-name $RESOURCEGROUPNAME --name $COSMOSACCOUNTNAME --db-name $COSMOSDBNAME)"
 if [ $isDbCreated = true ] ;
 then 
-    echo "    db $cosmosDbName already exits"
+    echo "    db $COSMOSDBNAME already exits"
 else
-    echo "    db $cosmosDbName does not exist, creating..."
+    echo "    db $COSMOSDBNAME does not exist, creating..."
     az cosmosdb database create \
-        --name $cosmosAccountName \
-        --db-name $cosmosDbName \
-        --resource-group $resourceGroupName
+        --name $COSMOSACCOUNTNAME \
+        --db-name $COSMOSDBNAME \
+        --resource-group $RESOURCEGROUPNAME
     echo
 fi
 
 # this creates a fixed-size container and 400 RU/s
 #
 echo "create a fixed size container and 400 RU/s"
-isCollectionCreated="$(az cosmosdb collection exists --db-name $cosmosDbName --collection-name $cosmosContainerName --resource-group-name $resourceGroupName --name $cosmosAccountName)"
+isCollectionCreated="$(az cosmosdb collection exists --db-name $COSMOSDBNAME --collection-name $COSMOSCONTAINERNAME --resource-group-name $RESOURCEGROUPNAME --name $COSMOSACCOUNTNAME)"
 if [ $isDbCreated = true ] ;
 then 
-    echo "    container $ $cosmosContainerName already exits"
+    echo "    container $ $COSMOSCONTAINERNAME already exits"
 else
-    echo "    container $ $cosmosContainerName does not exist, creating..."
+    echo "    container $ $COSMOSCONTAINERNAME does not exist, creating..."
     az cosmosdb collection create \
-        --resource-group $resourceGroupName \
-        --collection-name $cosmosContainerName \
-        --name $cosmosAccountName \
-        --db-name $cosmosDbName \
-        --throughput $cosmosThroughput \
+        --resource-group $RESOURCEGROUPNAME \
+        --collection-name $COSMOSCONTAINERNAME \
+        --name $COSMOSACCOUNTNAME \
+        --db-name $COSMOSDBNAME \
+        --throughput $COSMOSTHROUGHPUT \
         --partition-key-path /vanityUrl
 fi
 echo
@@ -139,31 +95,31 @@ echo
 # 
 echo "create a storage account for function to maintain state and other info for the function"
 az storage account create \
-    --name $functionStorageAccountName \
-    --location $functionStorageAccountRegion \
-    --resource-group $resourceGroupName \
-    --sku $functionStorageAccountSku
+    --name $FUNCTIONSTORAGEACCOUNTNAME \
+    --location $FUNCTIONSTORAGEACCOUNTREGION \
+    --resource-group $RESOURCEGROUPNAME \
+    --sku $FUNCTIONSTORAGEACCOUNTSKU
 echo
 
 # this creates the function app used to host the back end function
 #
 echo "create the function app for the back end "
 az functionapp create \
-    --resource-group $resourceGroupName \
-    --consumption-plan-location $functionConsumptionPlanRegion \
-    --name $functionName \
-    --storage-account $functionStorageAccountName \
-    --runtime $functionRuntime
+    --resource-group $RESOURCEGROUPNAME \
+    --consumption-plan-location $FUNCTIONCONSUMPTIONPLANREGION \
+    --name $FUNCTIONNAME \
+    --storage-account $FUNCTIONSTORAGEACCOUNTNAME \
+    --runtime $FUNCTIONRUNTIME
 echo
 
 # this sets authentication to be on and to use twitter for the back end
 # function
 #
 az webapp auth update \
-    --name $functionName \
-    --resource-group $resourceGroupName \
+    --name $FUNCTIONNAME \
+    --resource-group $RESOURCEGROUPNAME \
     --enabled true \
     --action LoginWithTwitter \
-    --twitter-consumer-key $twitterConsumerKey \
-    --twitter-consumer-secret $twitterConsumerSecret
+    --twitter-consumer-key $TWITTERCONSUMERKEY \
+    --twitter-consumer-secret $TWITTERCONSUMERSECRET
 echo
