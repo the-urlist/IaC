@@ -116,6 +116,7 @@ echo
 # setting the authentication of the function
 echo "getting the static website storage's primary endpoint "
 staticWebsiteUrl="$(az storage account show -n $STORAGEACCOUNTNAME -g $RESOURCEGROUPNAME --query "primaryEndpoints.web" --output tsv)"
+echo "static website storage's primary endpouint: $staticWebsiteUrl"
 echo
 
 # this sets authentication to be on and to use twitter for the back end
@@ -130,5 +131,5 @@ az webapp auth update \
     --action LoginWithTwitter \
     --twitter-consumer-key $TWITTERCONSUMERKEY \
     --twitter-consumer-secret $TWITTERCONSUMERSECRET \
-    --allowed-external-redirect-urls $staticWebSiteUrl
+    --allowed-external-redirect-urls $staticWebsiteUrl
 echo
