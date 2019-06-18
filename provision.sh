@@ -40,10 +40,14 @@ functionName=$FUNCTIONNAME
 echo "    functionName: $functionName"
 functionRuntime=$FUNCTIONRUNTIME
 echo "    functionRuntime: $functionRuntime"
+
 twitterConsumerKeyX=$TWITTERCONSUMERKEY
 echo "    twitterConsumerKeyX: $twitterConsumerKeyX"
 twitterConsumerKeyY=$twitterConsumerKey
-echo "    twitterConsumerKey: $twitterConsumerKeyY"
+echo "    twitterConsumerKeyY: $twitterConsumerKeyY"
+twitterConsumerKeyZ=$SECRET_TWITTERCONSUMERKEY
+echo "    twitterConsumerKeyZ: $twitterConsumerKeyZ"
+
 twitterConsumerSecret=$TWITTERCONSUMERSECRET
 echo "    twitterConsumerSecret: $twitterConsumerSecret"
 echo
