@@ -112,14 +112,23 @@ az functionapp create \
     --runtime $FUNCTIONRUNTIME
 echo
 
+# this grabs the static website storage primary endpoint to be used when
+# setting the authentication of the function
+echo "getting the static website storage's primary endpoint "
+staticWebsiteUrl="$(az storage account show -n $STORAGEACCOUNTNAME -g $RESOURCEGROUPNAME --query "primaryEndpoints.web" --output tsv)"
+echo
+
 # this sets authentication to be on and to use twitter for the back end
-# function
+# function, also sets the allowed external redirect urls to be the
+# static website storage primary endpoint
 #
+echo "setting authentication for the azure function app back end"
 az webapp auth update \
     --name $FUNCTIONNAME \
     --resource-group $RESOURCEGROUPNAME \
     --enabled true \
     --action LoginWithTwitter \
     --twitter-consumer-key $TWITTERCONSUMERKEY \
-    --twitter-consumer-secret $TWITTERCONSUMERSECRET
+    --twitter-consumer-secret $TWITTERCONSUMERSECRET \
+    --allowed-external-redirect-urls $staticWebSiteUrl
 echo
