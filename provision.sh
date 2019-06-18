@@ -116,7 +116,7 @@ echo
 # setting the authentication of the function
 echo "getting the static website storage's primary endpoint "
 staticWebsiteUrl="$(az storage account show -n $STORAGEACCOUNTNAME -g $RESOURCEGROUPNAME --query "primaryEndpoints.web" --output tsv)"
-echo "static website storage's primary endpouint: $staticWebsiteUrl"
+echo "static website storage's primary endpoint: $staticWebsiteUrl"
 echo
 
 # this sets authentication to be on and to use twitter for the back end
