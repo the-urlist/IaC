@@ -47,6 +47,10 @@ twitterConsumerKeyY=$twitterConsumerKey
 echo "    twitterConsumerKeyY: $twitterConsumerKeyY"
 twitterConsumerKeyZ=$SECRET_TWITTERCONSUMERKEY
 echo "    twitterConsumerKeyZ: $twitterConsumerKeyZ"
+twitterConsumerKeyA=$target_environment_variable
+echo "    twitterConsumerKeyA: $twitterConsumerKeyA"
+
+
 
 twitterConsumerSecret=$TWITTERCONSUMERSECRET
 echo "    twitterConsumerSecret: $twitterConsumerSecret"
