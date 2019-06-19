@@ -183,7 +183,7 @@ echo
 # this creates the backend pool frontend
 #
 echo "creating backend pool frontend"
-fqdnStaticWebsite=awk -F/ '{print $3}' <<<$staticWebsiteUrl
+fqdnStaticWebsite="$(awk -F/ '{print $3}' <<<$staticWebsiteUrl)"
 echo "    fqdn of static website: $fqdnStaticWebsite"
 az network front-door backend-pool create \
     --address $fqdnStaticWebsite \
