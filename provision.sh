@@ -145,7 +145,7 @@ az extension add \
 # this grabs the url for the function app
 echo "getting the url to the azure function"
 functionUrl="$(az functionapp config hostname list --resource-group the-urlist-serverless-abel3 --webapp-name theurlistfunction --query [0].name)"
-sed -e 's/^"//' -e 's/"$//' <<<"$functionUrl"
+functionUrl = sed -e 's/^"//' -e 's/"$//' <<<"$functionUrl"
 echo "function url: $functionUrl"
 echo
 
