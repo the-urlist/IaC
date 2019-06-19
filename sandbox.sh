@@ -6,5 +6,18 @@ echo "dsn records from cloudflare"
 echo "$listDnsResult"
 echo
 
-parsed="$(echo "$listDnsResult" | jq '.["result"] | length')"
-echo "success is: $parsed" 
+# this gets the number of dns entries
+numEntries="$(echo "$listDnsResult" | jq '.["result"] | length')"
+echo "number of dns entries: $numEntries" 
+
+dnsName="$(echo "$listDnsResult" | jq '.["result"][0]')"
+echo "dns name: $dnsname"
+
+
+# this looks for entry for our dns name
+# found=false
+# dnsName=""
+# for (( i=0; i<$numEntries; i++))
+# do
+    
+# done
