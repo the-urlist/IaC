@@ -10,7 +10,7 @@ echo
 numEntries="$(echo "$listDnsResult" | jq '.["result"] | length')"
 echo "number of dns entries: $numEntries" 
 
-dnsName="$(echo "$listDnsResult" | jq '.["result"][0]')"
+dnsName="$(echo "$listDnsResult" | jq '.["result"].[0]')"
 echo "dns name: $dnsname"
 
 
