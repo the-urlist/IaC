@@ -228,11 +228,12 @@ echo
 
 # this creates a temp routing rule so we can delete the default created 
 # routing rule. have to go through this round about way because a default
-# routing rule gets created. And you can't add another rule with the same
+# routing rule and a default backend pool gets created. And you can't add another rule with the same
 # endpoint and pattern. And you can't delete a routing rule if there is only 
 # one. So the plan is, create a temp routing rule with a crazy pattern match,
 # then delete the Default Routing Rule, then create my real routing rule, then
-# delete the temp routing rule. There has got to be a better way to do this!
+# delete the temp routing rule. And finally, delete the default back end pool.
+# There has got to be a better way to do this!
 #
 echo "creating a temp routing rule"
 az network front-door routing-rule create \
