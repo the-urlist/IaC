@@ -20,8 +20,8 @@ foundDnsEntry=false
 for (( i=0; i<$numEntries; i++))
 do
     if [ "$(echo $rawListDnsResult | jq '.["result"][$i]["name"]')" = "\"www.abelurlist.club\"" ] ;
-        foundDnsEntry=true
     then
+        foundDnsEntry=true
     fi
 done
 echo "found dns entry: $foundDnsEntry"
