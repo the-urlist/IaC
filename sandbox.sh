@@ -5,3 +5,6 @@ listDnsResult="$(echo "$listDnsResult" | jq '.')"
 echo "dsn records from cloudflare"
 echo "$listDnsResult"
 echo
+
+success="$(echo "$listDnsResult" + jq '.["success"]')"
+echo "success is: $success" 
