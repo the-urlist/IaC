@@ -14,10 +14,14 @@ dnsName="$(echo $rawListDnsResult | jq '.["result"][0]["name"]')"
 echo "dns name: $dnsName"
 
 
-# this looks for entry for our dns name
-# found=false
-# dnsName=""
-# for (( i=0; i<$numEntries; i++))
-# do
-    
-# done
+# this looks for our dns name, see if it has been set or not
+#
+foundDnsEntry=false 
+for (( i=0; i<$numEntries; i++))
+do
+    if [ "$(echo $rawListDnsResult | jq '.["result"][$i]["name"]')" = "\"www.abelurlist.club\""" ] ;
+        foundDnsEntry=true
+    then
+    fi
+done
+echo "found dns entry: $foundDnsEntry"
