@@ -6,5 +6,5 @@ echo "dsn records from cloudflare"
 echo "$listDnsResult"
 echo
 
-parsed="$(echo "$listDnsResult" | jq '.["result"]')"
+parsed="$(echo "$listDnsResult" | jq '.["result"] | length')"
 echo "success is: $parsed" 
