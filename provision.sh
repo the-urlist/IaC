@@ -3,15 +3,15 @@
 #
 # This Sets the subscription identified to be default subscription 
 #
-echo "Setting default subscription for Azure CLI: $SUBSCRIPTIONNAME"
-az account set --subscription $SUBSCRIPTIONNAME
-echo
+# echo "Setting default subscription for Azure CLI: $SUBSCRIPTIONNAME"
+# az account set --subscription $SUBSCRIPTIONNAME
+# echo ""
 
 # This creates the resource group used to house all of the URList application
 #
 echo "Creating resource group $RESOURCEGROUPNAME in region $RESOURCEGROUPREGION"
 az group create --name $RESOURCEGROUPNAME --location $RESOURCEGROUPREGION
-echo
+echo ""
 
 # This creates a storage account to host our static web site
 #
@@ -22,7 +22,7 @@ az storage account create \
     --resource-group $RESOURCEGROUPNAME \
     --sku "$STORAGEACCOUNTSKU" \
     --kind StorageV2
-echo
+echo ""
 
 # This sets the storage account so it can host a static website
 #
@@ -35,7 +35,7 @@ az storage blob service-properties update \
     --static-website \
     --404-document $ERRORDOCUMENTNAME \
     --index-document $INDEXDOCUMENTNAME
-echo
+echo ""
 
 # this create a SQL API Cosmos DB account with session consistency and multi-master 
 # enabled
@@ -48,7 +48,7 @@ az cosmosdb create \
     --resource-group $RESOURCEGROUPNAME \
     --default-consistency-level "Session" \
     --enable-multiple-write-locations true
-echo
+echo ""
 
 # This checks to see if the database exists in cosmos, if not, it creates a 
 # database for urlist, otherwise does nothing 
@@ -58,13 +58,14 @@ isDbCreated="$(az cosmosdb database exists --resource-group-name $RESOURCEGROUPN
 if [ $isDbCreated = true ] ;
 then 
     echo "    db $COSMOSDBNAME already exits"
+    echo ""
 else
     echo "    db $COSMOSDBNAME does not exist, creating..."
     az cosmosdb database create \
         --name $COSMOSACCOUNTNAME \
         --db-name $COSMOSDBNAME \
         --resource-group $RESOURCEGROUPNAME
-    echo
+    echo ""
 fi
 
 # this creates a fixed-size container and 400 RU/s
@@ -84,7 +85,7 @@ else
         --throughput $COSMOSTHROUGHPUT \
         --partition-key-path /vanityUrl
 fi
-echo
+echo ""
 
 # this creates a storage account for our back end azure function to maintain
 # state and other info for the function
@@ -95,7 +96,7 @@ az storage account create \
     --location $FUNCTIONSTORAGEACCOUNTREGION \
     --resource-group $RESOURCEGROUPNAME \
     --sku $FUNCTIONSTORAGEACCOUNTSKU
-echo
+echo ""
 
 # this creates the function app used to host the back end function
 #
@@ -106,14 +107,14 @@ az functionapp create \
     --name $FUNCTIONNAME \
     --storage-account $FUNCTIONSTORAGEACCOUNTNAME \
     --runtime $FUNCTIONRUNTIME
-echo
+echo ""
 
 # this grabs the static website storage primary endpoint to be used when
 # setting the authentication of the function
 echo "getting the static website storage's primary endpoint "
 staticWebsiteUrl="$(az storage account show -n $STORAGEACCOUNTNAME -g $RESOURCEGROUPNAME --query "primaryEndpoints.web" --output tsv)"
 echo "static website storage's primary endpoint: $staticWebsiteUrl"
-echo
+echo ""
 
 # this sets authentication to be on and to use twitter for the back end
 # function, also sets the allowed external redirect urls to be the
@@ -128,7 +129,7 @@ az webapp auth update \
     --twitter-consumer-key $TWITTERCONSUMERKEY \
     --twitter-consumer-secret $TWITTERCONSUMERSECRET \
     --allowed-external-redirect-urls $staticWebsiteUrl
-echo
+echo ""
 
 # this addes the front door extension to the azure cli. It's currently in preview
 # hopefully i can remove this soon
@@ -144,7 +145,7 @@ echo "getting the url to the azure function"
 functionUrl="$(az functionapp config hostname list --resource-group the-urlist-serverless-abel3 --webapp-name theurlistfunction --query [0].name)"
 functionUrl="$(sed -e 's/^"//' -e 's/"$//' <<<"$functionUrl")"
 echo "function url: $functionUrl"
-echo
+echo ""
 
 # this creates the front door service
 #
@@ -154,7 +155,7 @@ az network front-door create \
     --name $FRONTDOORNAME \
     --resource-group $RESOURCEGROUPNAME \
     --backend-host-header $DNSNAME
-echo
+echo ""
 
 # this creates the load balancer for front door frontend
 echo "creating load balancer for front door frontend"
@@ -164,7 +165,7 @@ az network front-door load-balancing create \
     --resource-group $RESOURCEGROUPNAME \
     --sample-size 4 \
     --successful-samples-required 2
-echo
+echo ""
 
 # this creates the health probe for front door frontend
 #
@@ -175,7 +176,7 @@ az network front-door probe create \
     --name frontendHealthProbe \
     --path / \
     --resource-group $RESOURCEGROUPNAME
-echo
+echo ""
 
 # this creates the backend pool frontend
 #
@@ -189,7 +190,7 @@ az network front-door backend-pool create \
     --name frontend \
     --probe frontendHealthProbe \
     --resource-group $RESOURCEGROUPNAME
-echo
+echo ""
 
 
 # this creates the load balancer for front door backend
@@ -201,7 +202,7 @@ az network front-door load-balancing create \
     --resource-group $RESOURCEGROUPNAME \
     --sample-size 4 \
     --successful-samples-required 2
-echo
+echo ""
 
 # this creates the health probe for front door backend
 #
@@ -212,7 +213,7 @@ az network front-door probe create \
     --name backendHealthProbe \
     --path / \
     --resource-group $RESOURCEGROUPNAME
-echo
+echo ""
 
 # this creates the backend pool backend
 #
@@ -224,7 +225,7 @@ az network front-door backend-pool create \
     --name backend \
     --probe backendHealthProbe \
     --resource-group $RESOURCEGROUPNAME
-echo
+echo ""
 
 # this creates a temp routing rule so we can delete the default created 
 # routing rule. have to go through this round about way because a default
@@ -244,7 +245,7 @@ az network front-door routing-rule create \
     --route-type Forward \
     --patterns /abeltemp/* \
     --backend-pool frontend
-echo
+echo ""
 
 # this deletes the DefaultRoutingRule that was automatically created
 #
@@ -253,7 +254,7 @@ az network front-door routing-rule delete \
     --front-door-name $FRONTDOORNAME \
     --name DefaultRoutingRule \
     --resource-group $RESOURCEGROUPNAME
-echo
+echo ""
 
 # this creates the routing rule frontend
 #
@@ -267,7 +268,7 @@ az network front-door routing-rule create \
     --accepted-protocols Http Https \
     --backend-pool frontend \
     --forwarding-protocol HttpsOnly
-echo
+echo ""
 
 # this deletes the temp routing rule
 #
@@ -276,7 +277,7 @@ az network front-door routing-rule delete \
     --front-door-name $FRONTDOORNAME \
     --name tempRoutingRule \
     --resource-group $RESOURCEGROUPNAME
-echo
+echo ""
 
 # this deletes the DefaultBackendPool
 #
@@ -285,7 +286,7 @@ az network front-door backend-pool delete \
     --front-door-name $FRONTDOORNAME \
     --name DefaultBackendPool \
     --resource-group $RESOURCEGROUPNAME
-echo
+echo ""
 
 # this lists all dns records from cloudflare
 #
