@@ -1,7 +1,6 @@
 # The variables used in the this script are passed in as environment variables by
 # Azure Pipelines
 #
-
 # This Sets the subscription identified to be default subscription 
 #
 echo "Setting default subscription for Azure CLI: $SUBSCRIPTIONNAME"
