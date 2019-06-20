@@ -51,7 +51,7 @@ else
         --data '{ \
             "type":"CNAME", \
             "name":"testdata", \
-            "content":"abelsquidheadxyz.com", \
+            "content":"abelurlistfd.azurefd.net", \
             "priority":10, \
             "proxied":false \
         }')"
