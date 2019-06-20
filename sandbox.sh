@@ -43,18 +43,7 @@ then
         }'
 else
     echo "adding new dns entry"
-    addNewDnsEntryResult="$(curl \
-        -X POST "https://api.cloudflare.com/client/v4/zo2bce9abe/dns_records" \
-        -H "X-Auth-Email: abel.wang@gmail.com" \
-        -H "X-Auth-Key: a084cb5ec135f5619f40895e958a138add805" \
-        -H "Content-Type: application/json" \
-        --data '{ \
-            "type":"CNAME", \
-            "name":"testdata", \
-            "content":"abelurlistfd.azurefd.net", \
-            "priority":10, \
-            "proxied":false \
-        }')"
+    addNewDnsEntryResult="$(curl -X POST "https://api.cloudflare.com/client/v4/zo2bce9abe/dns_records" -H "X-Auth-Email: abel.wang@gmail.com" -H "X-Auth-Key: a084cb5ec135f5619f40895e958a138add805" -H "Content-Type: application/json" --data '{"type":"CNAME", "name":"testdata", "content":"abelurlistfd.azurefd.net", "priority":10, "proxied":false}')"
     echo "    result message: "
     echo $addNewDnsEntryResult
 fi
