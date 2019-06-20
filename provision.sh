@@ -1,13 +1,6 @@
-#!/bin/bash
-
 # The variables used in the this script are passed in as environment variables by
 # Azure Pipelines
 #
-# This Sets the subscription identified to be default subscription 
-#
-# echo "Setting default subscription for Azure CLI: $SUBSCRIPTIONNAME"
-# az account set --subscription $SUBSCRIPTIONNAME
-# echo ""
 
 # This creates the resource group used to house all of the URList application
 #
