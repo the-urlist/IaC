@@ -12,7 +12,9 @@
 # This creates the resource group used to house all of the URList application
 #
 echo "Creating resource group $RESOURCEGROUPNAME in region $RESOURCEGROUPREGION"
-az group create --name $RESOURCEGROUPNAME --location $RESOURCEGROUPREGION
+az group create \
+    --name $RESOURCEGROUPNAME \
+    --location $RESOURCEGROUPREGION
 echo ""
 
 # This creates a storage account to host our static web site
