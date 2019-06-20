@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # The variables used in the this script are passed in as environment variables by
 # Azure Pipelines
 #
