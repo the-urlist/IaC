@@ -352,7 +352,7 @@ else
     curlResponse="$(curl \
         -X POST "https://api.cloudflare.com/client/v4/zones/$CLOUDFLAREZONE/dns_records" \
         -H "X-Auth-Email: $CLOUDFLAREEMAIL" \
-        -H "X-Auth-Key: $CLOUDFLAREZONE" \
+        -H "X-Auth-Key: $CLOUDFLAREKEY" \
         -H "Content-Type: application/json" \
         --data '{"type":"CNAME", "name":"www", "content":"abelurlistfd.azurefd.net", "priority":10, "proxied":false}')"
     echo "    cloudflare response: "
