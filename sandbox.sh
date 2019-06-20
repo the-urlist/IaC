@@ -16,24 +16,29 @@ echo "number of dns entries: $numEntries"
 
 # this looks for our dns name, see if it has been set or not
 #
-foundDnsEntry=false 
+foundDnsEntry=false
+foundDnsEntryId="x"
 for (( i=0; i<$numEntries; i++))
 do
     if [ "$(echo $listDnsResult | jq '.["result"]['$i']["name"]')" = "\"www.abelurlist.club\"" ] ;
     then
         foundDnsEntry=true
+        foundDnsEntryId="$(echo $listDnsResult | jq '.["result"]['$i']["id"]')"
         break
     fi
 done
 echo "found dns entry: $foundDnsEntry"
+echo "dns entry id: $foundDnsEntryId"
 
 if [ $foundDnsEntry = true ] ;
 then
     echo "updating dns entry"
-    curl -X PUT "https://api.cloudflare.com/client/v4/zones/3d7a85d315c8ff6541921c7c2bce9abe/dns_records/da001a069cfd3ab2c98462eefd7f144b" -H "X-Auth-Email: abel.wang@gmail.com" -H "X-Auth-Key: a084cb5ec135f5619f40895e958a138add805" -H "Content-Type: application/json" --data '{"type":"CNAME", "name":"www", "content":"abelurlistfd.azurefd.net", "proxied":false}'
+    curlResponse="$(curl -X PUT "https://api.cloudflare.com/client/v4/zones/3d7a85d315c8ff6541921c7c2bce9abe/dns_records/$foundDnsEntryId" -H "X-Auth-Email: abel.wang@gmail.com" -H "X-Auth-Key: a084cb5ec135f5619f40895e958a138add805" -H "Content-Type: application/json" --data '{"type":"CNAME", "name":"www", "content":"abelurlistfd.azurefd.net", "proxied":false}')"
+    echo "cloudflare response: "
+    echo "$curlResponse"
 else
     echo "adding new dns entry"
-    addNewDnsEntryResult="$(curl -X POST "https://api.cloudflare.com/client/v4/zo2bce9abe/dns_records" -H "X-Auth-Email: abel.wang@gmail.com" -H "X-Auth-Key: a084cb5ec135f5619f40895e958a138add805" -H "Content-Type: application/json" --data '{"type":"CNAME", "name":"testdata", "content":"abelurlistfd.azurefd.net", "priority":10, "proxied":false}')"
-    echo "    result message: "
-    echo $addNewDnsEntryResult
+    addNewDncurlResponsesEntryResult="$(curl -X POST "https://api.cloudflare.com/client/v4/zo2bce9abe/dns_records" -H "X-Auth-Email: abel.wang@gmail.com" -H "X-Auth-Key: a084cb5ec135f5619f40895e958a138add805" -H "Content-Type: application/json" --data '{"type":"CNAME", "name":"testdata", "content":"abelurlistfd.azurefd.net", "priority":10, "proxied":false}')"
+    echo "    cloudflare response: "
+    echo $curlResponse
 fi
