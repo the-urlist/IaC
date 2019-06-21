@@ -1,5 +1,5 @@
 az resource create \
-    --resource-group ca-abewan-demo-test \
+    --resource-group the-urlist-serverless-abel3 \
     --resource-type "Microsoft.Insights/components" \
     --name abelurlistfunctionappinsight \
     --location southcentralus \
@@ -7,5 +7,5 @@ az resource create \
 | grep -Po "\"InstrumentationKey\": \K\".*\"" \
 | xargs -I % az functionapp config appsettings set \
     --name abelurlistfunctionappinsight \
-    --resource-group ca-abewan-demo-test \
+    --resource-group the-urlist-serverless-abel3 \
     --settings "APPINSIGHTS_INSTRUMENTATIONKEY = %"
