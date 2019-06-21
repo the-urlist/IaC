@@ -369,7 +369,7 @@ then
         -H "X-Auth-Email: $CLOUDFLAREEMAIL" \
         -H "X-Auth-Key: $CLOUDFLAREKEY" \
         -H "Content-Type: application/json" \
-        --data '{"type":"CNAME", "name":"www", "content":"abelurlistfd.azurefd.net", "proxied":false}')"
+        --data '{"type":"CNAME", "name":"www", "content":"'$FRONTDOORNAME'", "proxied":false}')"
     echo "cloudflare response: "
     echo "$curlResponse"
     echo ""
@@ -380,7 +380,7 @@ else
         -H "X-Auth-Email: $CLOUDFLAREEMAIL" \
         -H "X-Auth-Key: $CLOUDFLAREKEY" \
         -H "Content-Type: application/json" \
-        --data '{"type":"CNAME", "name":"www", "content":"abelurlistfd.azurefd.net", "priority":10, "proxied":false}')"
+        --data '{"type":"CNAME", "name":"www", "content":"'$FRONTDOORNAMEzurefd'", "priority":10, "proxied":false}')"
     echo "    cloudflare response: "
     echo $curlResponse
     echo ""
