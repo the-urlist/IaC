@@ -318,6 +318,21 @@ az network front-door backend-pool delete \
     --resource-group $RESOURCEGROUPNAME
 echo ""
 
+# this creates the routing rule api
+#
+echo "creating routing rule for api"
+az network front-door routing-rule create \
+    --front-door-name $FRONTDOORNAME \
+    --frontend-endpoints DefaultFrontendEndpoint \
+    --name api \
+    --resource-group $RESOURCEGROUPNAME \
+    --route-type Forward \
+    --accepted-protocols Http Https \
+    --backend-pool backend \
+    --forwarding-protocol HttpsOnly
+    --patterns /api/* \
+echo ""
+
 # this lists all dns records from cloudflare
 #
 echo "getting all dns records from cloudflare"
