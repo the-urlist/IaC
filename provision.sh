@@ -376,7 +376,7 @@ echo ""
 
 # this either updates or adds a new dns entry to cloudflare
 #
-frontDoorFQDN=$FRONTDOORNAME".azure.net"
+frontDoorFQDN=$FRONTDOORNAME".azurefd.net"
 echo "front door fqdn: $frontDoorFQDN"
 if [ $foundDnsEntry = true ] ;
 then
