@@ -4,6 +4,7 @@ appInsightCreateResponse="$(az resource create \
     --name abelurlistfunctionappinsight \
     --location southcentralus \
     --properties '{"Application_Type":"web"}')" 
+echo "$appInsightCreateResponse"
     
     
 #     \
