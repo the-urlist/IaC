@@ -128,6 +128,36 @@ az webapp auth update \
     --allowed-external-redirect-urls $staticWebsiteUrl
 echo ""
 
+# this creates an instance of appliction insight
+#
+echo "creating application insight for the function"
+appInsightCreateResponse="$(az resource create \
+    --resource-group $RESOURCEGROUPNAME \
+    --resource-type "Microsoft.Insights/components" \
+    --name $APPLICATIONINSIGHTNAME \
+    --location $APPLICATIONINSIGHTLOCATION \
+    --properties '{"Application_Type":"web"}')" 
+echo "$appInsightCreateResponse"
+echo ""
+
+# this grabs the instrumentation key from the creation response
+#
+instrumentationKey="$(echo $appInsightCreateResponse | jq '.["properties"]["InstrumentationKey"]')"
+# strips off begin and end quotes
+instrumentationKey="$(sed -e 's/^"//' -e 's/"$//' <<<"$instrumentationKey")"
+echo "instrumentation key: $instrumentationKey"
+
+# this wires up application insights to the function
+# echo "wiring up app insight to function"
+#
+az functionapp config appsettings set \
+    --name $FUNCTIONNAME \
+    --resource-group $RESOURCEGROUPNAME \
+    --settings "APPINSIGHTS_INSTRUMENTATIONKEY = $instrumentationKey"
+echo ""
+
+
+
 # this addes the front door extension to the azure cli. It's currently in preview
 # hopefully i can remove this soon
 #
