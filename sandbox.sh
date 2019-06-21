@@ -12,7 +12,10 @@ echo ""
 
 # this grabs the instrumentation key from the creation response
 #
-echo $appInsightCreateResponse | jq '.["properties"]["InstrumentationKey"]'
+instrumentationKey="$(echo $appInsightCreateResponse | jq '.["properties"]["InstrumentationKey"]')"
+# this strips off begin and end quotes
+instrumentationKey="$(sed -e 's/^"//' -e 's/"$//' <<<"$instrumentationKey")"
+echo "instrumentation key: $instrumentationKey"
 
 # this wires up application insights to the function
 # echo "wiring up app insight to function"
