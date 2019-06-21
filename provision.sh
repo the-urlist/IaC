@@ -37,7 +37,7 @@ echo ""
 # this create a SQL API Cosmos DB account with session consistency and multi-master 
 # enabled
 #
-echo "creating cosmos db with session consistency and multi-master"
+echo "creating cosmos db account"
 # az cosmosdb create \
 #     --name $COSMOSACCOUNTNAME \
 #     --kind GlobalDocumentDB \
