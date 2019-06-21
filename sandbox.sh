@@ -21,7 +21,7 @@ echo "instrumentation key: $instrumentationKey"
 # echo "wiring up app insight to function"
 #
 az functionapp config appsettings set \
-    --name abelurlistfunction \
+    --name theurlistfunction \
     --resource-group the-urlist-serverless-abel3 \
     --settings "APPINSIGHTS_INSTRUMENTATIONKEY = $instrumentationKey"
 echo ""
