@@ -361,6 +361,8 @@ echo ""
 
 # this either updates or adds a new dns entry to cloudflare
 #
+frontDoorFQDN=$FRONTDOORNAME".azure.net"
+echo "front door fqdn: $frontDoorFQDN"
 if [ $foundDnsEntry = true ] ;
 then
     echo "updating dns entry"
@@ -369,7 +371,7 @@ then
         -H "X-Auth-Email: $CLOUDFLAREEMAIL" \
         -H "X-Auth-Key: $CLOUDFLAREKEY" \
         -H "Content-Type: application/json" \
-        --data '{"type":"CNAME", "name":"www", "content":"'$FRONTDOORNAME'", "proxied":false}')"
+        --data '{"type":"CNAME", "name":"www", "content":"'$frontDoorFQDN'", "proxied":false}')"
     echo "cloudflare response: "
     echo "$curlResponse"
     echo ""
@@ -380,7 +382,7 @@ else
         -H "X-Auth-Email: $CLOUDFLAREEMAIL" \
         -H "X-Auth-Key: $CLOUDFLAREKEY" \
         -H "Content-Type: application/json" \
-        --data '{"type":"CNAME", "name":"www", "content":"'$FRONTDOORNAMEzurefd'", "priority":10, "proxied":false}')"
+        --data '{"type":"CNAME", "name":"www", "content":"'$frontDoorFQDN'", "priority":10, "proxied":false}')"
     echo "    cloudflare response: "
     echo $curlResponse
     echo ""
