@@ -326,7 +326,6 @@ az network front-door routing-rule create \
     --frontend-endpoints DefaultFrontendEndpoint \
     --name api \
     --resource-group $RESOURCEGROUPNAME \
-    --resource-group $ \
     --route-type Forward \
     --accepted-protocols Http Https \
     --backend-pool backend \
