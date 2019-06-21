@@ -1,4 +1,4 @@
-m# The variables used in the this script are passed in as environment variables by
+# The variables used in the this script are passed in as environment variables by
 # Azure Pipelines
 #
 
@@ -38,13 +38,16 @@ echo ""
 # enabled
 #
 echo "creating cosmos db with session consistency and multi-master"
+# az cosmosdb create \
+#     --name $COSMOSACCOUNTNAME \
+#     --kind GlobalDocumentDB \
+#     --locations "South Central US"=0 "North Central US"=1 \
+#     --resource-group $RESOURCEGROUPNAME \
+#     --default-consistency-level "Session" \
+#     --enable-multiple-write-locations true
 az cosmosdb create \
     --name $COSMOSACCOUNTNAME \
-    --kind GlobalDocumentDB \
-    --locations "South Central US"=0 "North Central US"=1 \
-    --resource-group $RESOURCEGROUPNAME \
-    --default-consistency-level "Session" \
-    --enable-multiple-write-locations true
+    --resource-grou $RESOURCEGROUPNAME
 echo ""
 
 # This checks to see if the database exists in cosmos, if not, it creates a 
