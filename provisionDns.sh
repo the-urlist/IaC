@@ -43,7 +43,7 @@ echo ""
 
 # this either updates or adds a new dns entry to cloudflare
 #
-frontDoorFQDN=$FRONTDOORNAME".azurefd.net"
+frontDoorFQDN=$IAC_EXCLUSIVE_FRONTDOORNAME".azurefd.net"
 echo "front door fqdn: $frontDoorFQDN"
 if [ $foundDnsEntry = true ] ;
 then
