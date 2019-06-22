@@ -32,7 +32,7 @@ echo "creating frontend host domain name: $IAC_DNSNAME"
 az network front-door frontend-endpoint create \
     --front-door-name $IAC_EXCLUSIVE_FRONTDOORNAME \
     --host-name $IAC_DNSNAME \
-    --resource-group IAC_EXCLUSIVE_RESOURCEGROUPNAME \
+    --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME \
     --name $IAC_FRIENDLYDNSNAME
 
 # # this creates the load balancer for front door frontend
