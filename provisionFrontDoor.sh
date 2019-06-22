@@ -11,7 +11,7 @@ az extension add \
 # this grabs the url for the function app
 #
 echo "getting the url to the azure function"
-functionUrl="$(az functionapp config hostname list --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME --webapp-name theurlistfunction --query [0].name)"
+functionUrl="$(az functionapp config hostname list --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME --webapp-name $IAC_EXCLUSIVE_FUNCTIONNAME --query [0].name)"
 functionUrl="$(sed -e 's/^"//' -e 's/"$//' <<<"$functionUrl")"
 echo "function url: $functionUrl"
 echo ""
