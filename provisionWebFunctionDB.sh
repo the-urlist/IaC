@@ -4,34 +4,34 @@
 
 # This creates the resource group used to house all of the URList application
 #
-echo "Creating resource group $IAC_EXCLUSIVE_RESOURCEGROUPNAME in region $RESOURCEGROUPREGION"
+echo "Creating resource group $IAC_EXCLUSIVE_RESOURCEGROUPNAME in region $IAC_RESOURCEGROUPREGION"
 az group create \
     --name $IAC_EXCLUSIVE_RESOURCEGROUPNAME \
-    --location $RESOURCEGROUPREGION
+    --location $IAC_RESOURCEGROUPREGION
 echo ""
 
 # This creates a storage account to host our static web site
 #
-echo "Creating storage account $STORAGEACCOUNTNAME in resource group $IAC_EXCLUSIVE_RESOURCEGROUPNAME"
+echo "Creating storage account $IAC_EXCLUSIVE_WEBSTORAGEACCOUNTNAME in resource group $IAC_EXCLUSIVE_RESOURCEGROUPNAME"
 az storage account create \
-    --location $STORAGEACCOUNTREGION \
-    --name $STORAGEACCOUNTNAME \
+    --location $IAC_WEBSTORAGEACCOUNTREGION \
+    --name $IAC_EXCLUSIVE_WEBSTORAGEACCOUNTNAME \
     --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME \
-    --sku "$STORAGEACCOUNTSKU" \
+    --sku "$IAC_WEBSTORAGEACCOUNTSKU" \
     --kind StorageV2
 echo ""
 
 # This sets the storage account so it can host a static website
 #
-echo "Enabling static website hosting in storage account $STORAGEACCOUNTNAME"
+echo "Enabling static website hosting in storage account $IAC_EXCLUSIVE_WEBSTORAGEACCOUNTNAME"
 az extension add \
     --name storage-preview
 
 az storage blob service-properties update \
-    --account-name $STORAGEACCOUNTNAME \
+    --account-name $IAC_EXCLUSIVE_WEBSTORAGEACCOUNTNAME \
     --static-website \
-    --404-document $ERRORDOCUMENTNAME \
-    --index-document $INDEXDOCUMENTNAME
+    --404-document $IAC_ERRORDOCUMENTNAME \
+    --index-document $IAC_INDEXDOCUMENTNAME
 echo ""
 
 # this create a SQL API Cosmos DB account with session consistency and multi-master 
@@ -39,31 +39,31 @@ echo ""
 #
 echo "creating cosmos db account"
 # az cosmosdb create \
-#     --name $COSMOSACCOUNTNAME \
+#     --name $IAC_EXCLUSIVE_COSMOSACCOUNTNAME \
 #     --kind GlobalDocumentDB \
 #     --locations "South Central US"=0 "North Central US"=1 \
 #     --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME \
 #     --default-consistency-level "Session" \
 #     --enable-multiple-write-locations true
 az cosmosdb create \
-    --name $COSMOSACCOUNTNAME \
+    --name $IAC_EXCLUSIVE_COSMOSACCOUNTNAME \
     --resource-grou $IAC_EXCLUSIVE_RESOURCEGROUPNAME
 echo ""
 
 # This checks to see if the database exists in cosmos, if not, it creates a 
 # database for urlist, otherwise does nothing 
 #
-echo "create the db $COSMOSDBNAME for urlist in cosmos"
-isDbCreated="$(az cosmosdb database exists --resource-group-name $IAC_EXCLUSIVE_RESOURCEGROUPNAME --name $COSMOSACCOUNTNAME --db-name $COSMOSDBNAME)"
+echo "create the db $IAC_COSMOSDBNAME for urlist in cosmos"
+isDbCreated="$(az cosmosdb database exists --resource-group-name $IAC_EXCLUSIVE_RESOURCEGROUPNAME --name $IAC_EXCLUSIVE_COSMOSACCOUNTNAME --db-name $IAC_COSMOSDBNAME)"
 if [ $isDbCreated = true ] ;
 then 
-    echo "    db $COSMOSDBNAME already exits"
+    echo "    db $IAC_COSMOSDBNAME already exits"
     echo ""
 else
-    echo "    db $COSMOSDBNAME does not exist, creating..."
+    echo "    db $IAC_COSMOSDBNAME does not exist, creating..."
     az cosmosdb database create \
-        --name $COSMOSACCOUNTNAME \
-        --db-name $COSMOSDBNAME \
+        --name $IAC_EXCLUSIVE_COSMOSACCOUNTNAME \
+        --db-name $IAC_COSMOSDBNAME \
         --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME
     echo ""
 fi
@@ -71,18 +71,18 @@ fi
 # this creates a fixed-size container and 400 RU/s
 #
 echo "create a fixed size container and 400 RU/s"
-isCollectionCreated="$(az cosmosdb collection exists --db-name $COSMOSDBNAME --collection-name $COSMOSCONTAINERNAME --resource-group-name $IAC_EXCLUSIVE_RESOURCEGROUPNAME --name $COSMOSACCOUNTNAME)"
+isCollectionCreated="$(az cosmosdb collection exists --db-name $IAC_COSMOSDBNAME --collection-name $IAC_COSMOSCONTAINERNAME --resource-group-name $IAC_EXCLUSIVE_RESOURCEGROUPNAME --name $IAC_EXCLUSIVE_COSMOSACCOUNTNAME)"
 if [ $isDbCreated = true ] ;
 then 
-    echo "    container $ $COSMOSCONTAINERNAME already exits"
+    echo "    container $ $IAC_COSMOSCONTAINERNAME already exits"
 else
-    echo "    container $ $COSMOSCONTAINERNAME does not exist, creating..."
+    echo "    container $ $IAC_COSMOSCONTAINERNAME does not exist, creating..."
     az cosmosdb collection create \
         --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME \
-        --collection-name $COSMOSCONTAINERNAME \
-        --name $COSMOSACCOUNTNAME \
-        --db-name $COSMOSDBNAME \
-        --throughput $COSMOSTHROUGHPUT \
+        --collection-name $IAC_COSMOSCONTAINERNAME \
+        --name $IAC_EXCLUSIVE_COSMOSACCOUNTNAME \
+        --db-name $IAC_COSMOSDBNAME \
+        --throughput $IAC_COSMOSTHROUGHPUT \
         --partition-key-path /vanityUrl
 fi
 echo ""
@@ -92,10 +92,10 @@ echo ""
 # 
 echo "create a storage account for function to maintain state and other info for the function"
 az storage account create \
-    --name $FUNCTIONSTORAGEACCOUNTNAME \
-    --location $FUNCTIONSTORAGEACCOUNTREGION \
+    --name $IAC_EXCLUSIVE_FUNCTIONSTORAGEACCOUNTNAME \
+    --location $IAC_FUNCTIONSTORAGEACCOUNTREGION \
     --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME \
-    --sku $FUNCTIONSTORAGEACCOUNTSKU
+    --sku $IAC_FUNCTIONSTORAGEACCOUNTSKU
 echo ""
 
 # this creates the function app used to host the back end function
@@ -103,16 +103,16 @@ echo ""
 echo "create the function app for the back end "
 az functionapp create \
     --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME \
-    --consumption-plan-location $FUNCTIONCONSUMPTIONPLANREGION \
-    --name $FUNCTIONNAME \
-    --storage-account $FUNCTIONSTORAGEACCOUNTNAME \
-    --runtime $FUNCTIONRUNTIME
+    --consumption-plan-location $IAC_FUNCTIONCONSUMPTIONPLANREGION \
+    --name $IAC_EXCLUSIVE_FUNCTIONNAME \
+    --storage-account $IAC_EXCLUSIVE_FUNCTIONSTORAGEACCOUNTNAME \
+    --runtime $IAC_FUNCTIONRUNTIME
 echo ""
 
 # this grabs the static website storage primary endpoint to be used when
 # setting the authentication of the function
 echo "getting the static website storage's primary endpoint "
-staticWebsiteUrl="$(az storage account show -n $STORAGEACCOUNTNAME -g $IAC_EXCLUSIVE_RESOURCEGROUPNAME --query "primaryEndpoints.web" --output tsv)"
+staticWebsiteUrl="$(az storage account show -n $IAC_EXCLUSIVE_WEBSTORAGEACCOUNTNAME -g $IAC_EXCLUSIVE_RESOURCEGROUPNAME --query "primaryEndpoints.web" --output tsv)"
 echo "static website storage's primary endpoint: $staticWebsiteUrl"
 echo ""
 
@@ -122,7 +122,7 @@ echo ""
 #
 echo "setting authentication for the azure function app back end"
 az webapp auth update \
-    --name $FUNCTIONNAME \
+    --name $IAC_EXCLUSIVE_FUNCTIONNAME \
     --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME \
     --enabled true \
     --action LoginWithTwitter \
@@ -137,8 +137,8 @@ echo "creating application insight for the function"
 appInsightCreateResponse="$(az resource create \
     --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME \
     --resource-type "Microsoft.Insights/components" \
-    --name $APPLICATIONINSIGHTNAME \
-    --location $APPLICATIONINSIGHTLOCATION \
+    --name $IAC_APPLICATIONINSIGHTNAME \
+    --location $IAC_APPLICATIONINSIGHTLOCATION \
     --properties '{"Application_Type":"web"}')" 
 echo "$appInsightCreateResponse"
 echo ""
@@ -154,7 +154,7 @@ echo "instrumentation key: $instrumentationKey"
 # echo "wiring up app insight to function"
 #
 az functionapp config appsettings set \
-    --name $FUNCTIONNAME \
+    --name $IAC_EXCLUSIVE_FUNCTIONNAME \
     --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME \
     --settings "APPINSIGHTS_INSTRUMENTATIONKEY = $instrumentationKey"
 echo ""
@@ -182,15 +182,15 @@ echo ""
 # echo "creating front door service"
 # az network front-door create \
 #     --backend-address $functionUrl \
-#     --name $FRONTDOORNAME \
+#     --name $IAC_EXCLUSIVE_FUNCTIONNAME \
 #     --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME \
-#     --backend-host-header $DNSNAME
+#     --backend-host-header $IAC_DNSNAME
 # echo ""
 
 # # this creates the load balancer for front door frontend
 # echo "creating load balancer for front door frontend"
 # az network front-door load-balancing create \
-#     --front-door-name $FRONTDOORNAME \
+#     --front-door-name $IAC_EXCLUSIVE_FUNCTIONNAME \
 #     --name frontendLoadBalanceSetting \
 #     --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME \
 #     --sample-size 4 \
@@ -201,7 +201,7 @@ echo ""
 # #
 # echo "creating health probe for front door frontend"
 # az network front-door probe create \
-#     --front-door-name $FRONTDOORNAME \
+#     --front-door-name $IAC_EXCLUSIVE_FUNCTIONNAME \
 #     --interval 255 \
 #     --name frontendHealthProbe \
 #     --path / \
@@ -215,7 +215,7 @@ echo ""
 # echo "    fqdn of static website: $fqdnStaticWebsite"
 # az network front-door backend-pool create \
 #     --address $fqdnStaticWebsite \
-#     --front-door-name $FRONTDOORNAME \
+#     --front-door-name $IAC_EXCLUSIVE_FUNCTIONNAME \
 #     --load-balancing frontendLoadBalanceSetting \
 #     --name frontend \
 #     --probe frontendHealthProbe \
@@ -227,7 +227,7 @@ echo ""
 # # 
 # echo "creating load balancer for front door backend"
 # az network front-door load-balancing create \
-#     --front-door-name $FRONTDOORNAME \
+#     --front-door-name $IAC_EXCLUSIVE_FUNCTIONNAME \
 #     --name backendLoadBalanceSetting \
 #     --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME \
 #     --sample-size 4 \
@@ -238,7 +238,7 @@ echo ""
 # #
 # echo "creating health probe for front door backend"
 # az network front-door probe create \
-#     --front-door-name $FRONTDOORNAME \
+#     --front-door-name $IAC_EXCLUSIVE_FUNCTIONNAME \
 #     --interval 255 \
 #     --name backendHealthProbe \
 #     --path / \
@@ -250,7 +250,7 @@ echo ""
 # echo "creating backend pool backend"
 # az network front-door backend-pool create \
 #     --address $functionUrl \
-#     --front-door-name $FRONTDOORNAME \
+#     --front-door-name $IAC_EXCLUSIVE_FUNCTIONNAME \
 #     --load-balancing backendLoadBalanceSetting \
 #     --name backend \
 #     --probe backendHealthProbe \
@@ -268,7 +268,7 @@ echo ""
 # #
 # echo "creating a temp routing rule"
 # az network front-door routing-rule create \
-#     --front-door-name $FRONTDOORNAME \
+#     --front-door-name $IAC_EXCLUSIVE_FUNCTIONNAME \
 #     --frontend-endpoints DefaultFrontendEndpoint \
 #     --name tempRoutingRule \
 #     --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME \
@@ -281,7 +281,7 @@ echo ""
 # #
 # echo "Deleting DefaultRoutingRule"
 # az network front-door routing-rule delete \
-#     --front-door-name $FRONTDOORNAME \
+#     --front-door-name $IAC_EXCLUSIVE_FUNCTIONNAME \
 #     --name DefaultRoutingRule \
 #     --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME
 # echo ""
@@ -290,7 +290,7 @@ echo ""
 # #
 # echo "creating routing rule for frontend"
 # az network front-door routing-rule create \
-#     --front-door-name $FRONTDOORNAME \
+#     --front-door-name $IAC_EXCLUSIVE_FUNCTIONNAME \
 #     --frontend-endpoints DefaultFrontendEndpoint \
 #     --name frontend \
 #     --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME \
@@ -304,7 +304,7 @@ echo ""
 # #
 # echo "Deleting tempRoutingRule"
 # az network front-door routing-rule delete \
-#     --front-door-name $FRONTDOORNAME \
+#     --front-door-name $IAC_EXCLUSIVE_FUNCTIONNAME \
 #     --name tempRoutingRule \
 #     --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME
 # echo ""
@@ -313,7 +313,7 @@ echo ""
 # #
 # echo "Deleting DefaultBackendPool"
 # az network front-door backend-pool delete \
-#     --front-door-name $FRONTDOORNAME \
+#     --front-door-name $IAC_EXCLUSIVE_FUNCTIONNAME \
 #     --name DefaultBackendPool \
 #     --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME
 # echo ""
@@ -322,7 +322,7 @@ echo ""
 # #
 # echo "creating routing rule for api"
 # az network front-door routing-rule create \
-#     --front-door-name $FRONTDOORNAME \
+#     --front-door-name $IAC_EXCLUSIVE_FUNCTIONNAME \
 #     --frontend-endpoints DefaultFrontendEndpoint \
 #     --name api \
 #     --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME \
@@ -376,7 +376,7 @@ echo ""
 
 # # this either updates or adds a new dns entry to cloudflare
 # #
-# frontDoorFQDN=$FRONTDOORNAME".azurefd.net"
+# frontDoorFQDN=$IAC_EXCLUSIVE_FUNCTIONNAME".azurefd.net"
 # echo "front door fqdn: $frontDoorFQDN"
 # if [ $foundDnsEntry = true ] ;
 # then

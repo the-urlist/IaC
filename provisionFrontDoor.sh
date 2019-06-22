@@ -11,7 +11,7 @@ az extension add \
 # this grabs the url for the function app
 #
 echo "getting the url to the azure function"
-functionUrl="$(az functionapp config hostname list --resource-group the-urlist-serverless-abel3 --webapp-name theurlistfunction --query [0].name)"
+functionUrl="$(az functionapp config hostname list --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME --webapp-name theurlistfunction --query [0].name)"
 functionUrl="$(sed -e 's/^"//' -e 's/"$//' <<<"$functionUrl")"
 echo "function url: $functionUrl"
 echo ""
@@ -21,12 +21,12 @@ echo ""
 echo "creating front door service"
 az network front-door create \
     --backend-address $functionUrl \
-    --name $FRONTDOORNAME \
+    --name $IAC_EXCLUSIVE_FRONTDOORNAME \
     --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME \
-    --backend-host-header $DNSNAME
+    --backend-host-header $IAC_DNSNAME
 echo ""
 
-# this creates the Frontend Host $DNSNAME
+# this creates the Frontend Host 
 #
 echo "creating frontend host www.abelurlist.club"
 
@@ -36,7 +36,7 @@ echo "creating frontend host www.abelurlist.club"
 # this creates the load balancer for front door frontend
 echo "creating load balancer for front door frontend"
 az network front-door load-balancing create \
-    --front-door-name $FRONTDOORNAME \
+    --front-door-name $IAC_EXCLUSIVE_FRONTDOORNAME \
     --name frontendLoadBalanceSetting \
     --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME \
     --sample-size 4 \
@@ -47,7 +47,7 @@ echo ""
 #
 echo "creating health probe for front door frontend"
 az network front-door probe create \
-    --front-door-name $FRONTDOORNAME \
+    --front-door-name $IAC_EXCLUSIVE_FRONTDOORNAME \
     --interval 255 \
     --name frontendHealthProbe \
     --path / \
@@ -57,13 +57,13 @@ echo ""
 # this creates the backend pool frontend
 #
 echo "creating backend pool frontend"
-staticWebsiteUrl="$(az storage account show -n $STORAGEACCOUNTNAME -g $IAC_EXCLUSIVE_RESOURCEGROUPNAME --query "primaryEndpoints.web" --output tsv)"
+staticWebsiteUrl="$(az storage account show -n $IAC_EXCLUSIVE_WEBSTORAGEACCOUNTNAME -g $IAC_EXCLUSIVE_RESOURCEGROUPNAME --query "primaryEndpoints.web" --output tsv)"
 echo "static website storage's primary endpoint: $staticWebsiteUrl"
 fqdnStaticWebsite="$(awk -F/ '{print $3}' <<<$staticWebsiteUrl)"
 echo "    fqdn of static website: $fqdnStaticWebsite"
 az network front-door backend-pool create \
     --address $fqdnStaticWebsite \
-    --front-door-name $FRONTDOORNAME \
+    --front-door-name $IAC_EXCLUSIVE_FRONTDOORNAME \
     --load-balancing frontendLoadBalanceSetting \
     --name frontend \
     --probe frontendHealthProbe \
@@ -75,7 +75,7 @@ echo ""
 # 
 echo "creating load balancer for front door backend"
 az network front-door load-balancing create \
-    --front-door-name $FRONTDOORNAME \
+    --front-door-name $IAC_EXCLUSIVE_FRONTDOORNAME \
     --name backendLoadBalanceSetting \
     --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME \
     --sample-size 4 \
@@ -86,7 +86,7 @@ echo ""
 #
 echo "creating health probe for front door backend"
 az network front-door probe create \
-    --front-door-name $FRONTDOORNAME \
+    --front-door-name $IAC_EXCLUSIVE_FRONTDOORNAME \
     --interval 255 \
     --name backendHealthProbe \
     --path / \
@@ -98,7 +98,7 @@ echo ""
 echo "creating backend pool backend"
 az network front-door backend-pool create \
     --address $functionUrl \
-    --front-door-name $FRONTDOORNAME \
+    --front-door-name $IAC_EXCLUSIVE_FRONTDOORNAME \
     --load-balancing backendLoadBalanceSetting \
     --name backend \
     --probe backendHealthProbe \
@@ -116,7 +116,7 @@ echo ""
 #
 echo "creating a temp routing rule"
 az network front-door routing-rule create \
-    --front-door-name $FRONTDOORNAME \
+    --front-door-name $IAC_EXCLUSIVE_FRONTDOORNAME \
     --frontend-endpoints DefaultFrontendEndpoint \
     --name tempRoutingRule \
     --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME \
@@ -129,7 +129,7 @@ echo ""
 #
 echo "Deleting DefaultRoutingRule"
 az network front-door routing-rule delete \
-    --front-door-name $FRONTDOORNAME \
+    --front-door-name $IAC_EXCLUSIVE_FRONTDOORNAME \
     --name DefaultRoutingRule \
     --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME
 echo ""
@@ -138,7 +138,7 @@ echo ""
 #
 echo "creating routing rule for frontend"
 az network front-door routing-rule create \
-    --front-door-name $FRONTDOORNAME \
+    --front-door-name $IAC_EXCLUSIVE_FRONTDOORNAME \
     --frontend-endpoints DefaultFrontendEndpoint \
     --name frontend \
     --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME \
@@ -152,7 +152,7 @@ echo ""
 #
 echo "Deleting tempRoutingRule"
 az network front-door routing-rule delete \
-    --front-door-name $FRONTDOORNAME \
+    --front-door-name $IAC_EXCLUSIVE_FRONTDOORNAME \
     --name tempRoutingRule \
     --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME
 echo ""
@@ -161,7 +161,7 @@ echo ""
 #
 echo "Deleting DefaultBackendPool"
 az network front-door backend-pool delete \
-    --front-door-name $FRONTDOORNAME \
+    --front-door-name $IAC_EXCLUSIVE_FRONTDOORNAME \
     --name DefaultBackendPool \
     --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME
 echo ""
@@ -170,7 +170,7 @@ echo ""
 #
 echo "creating routing rule for api"
 az network front-door routing-rule create \
-    --front-door-name $FRONTDOORNAME \
+    --front-door-name $IAC_EXCLUSIVE_FRONTDOORNAME \
     --frontend-endpoints DefaultFrontendEndpoint \
     --name api \
     --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME \
