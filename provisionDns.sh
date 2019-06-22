@@ -1,6 +1,8 @@
 # this lists all dns records from cloudflare
 #
 echo "getting all dns records from cloudflare"
+echo "cloudflare key: $CLOUDFLAREKEY"
+echo "cloudflare email: $CLOUDFLAREEMAIL"
 listDnsResult="$(curl \
     --header "X-Auth-Key: $CLOUDFLAREKEY" \
     --header "X-Auth-Email: $CLOUDFLAREEMAIL" \
