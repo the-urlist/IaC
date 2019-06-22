@@ -1,6 +1,11 @@
 # this creates the front door service
 #
 echo "creating front door service"
+echo "getting the url to the azure function"
+functionUrl="$(az functionapp config hostname list --resource-group the-urlist-serverless-abel3 --webapp-name theurlistfunction --query [0].name)"
+functionUrl="$(sed -e 's/^"//' -e 's/"$//' <<<"$functionUrl")"
+echo "function url: $functionUrl"
+echo ""
 az network front-door create \
     --backend-address $functionUrl \
     --name $FRONTDOORNAME \
@@ -32,6 +37,8 @@ echo ""
 # this creates the backend pool frontend
 #
 echo "creating backend pool frontend"
+staticWebsiteUrl="$(az storage account show -n $STORAGEACCOUNTNAME -g $RESOURCEGROUPNAME --query "primaryEndpoints.web" --output tsv)"
+echo "static website storage's primary endpoint: $staticWebsiteUrl"
 fqdnStaticWebsite="$(awk -F/ '{print $3}' <<<$staticWebsiteUrl)"
 echo "    fqdn of static website: $fqdnStaticWebsite"
 az network front-door backend-pool create \
