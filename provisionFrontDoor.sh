@@ -1,11 +1,24 @@
-# this creates the front door service
+# this script file creates the front door service used to route all of our 
+# traffic and configures everything
 #
-echo "creating front door service"
+
+# this addes the front door extension to the azure cli. It's currently in preview
+# hopefully i can remove this soon
+#
+az extension add \
+    --name front-door
+
+# this grabs the url for the function app
+#
 echo "getting the url to the azure function"
 functionUrl="$(az functionapp config hostname list --resource-group the-urlist-serverless-abel3 --webapp-name theurlistfunction --query [0].name)"
 functionUrl="$(sed -e 's/^"//' -e 's/"$//' <<<"$functionUrl")"
 echo "function url: $functionUrl"
 echo ""
+
+# this creates the front door service
+#
+echo "creating front door service"
 az network front-door create \
     --backend-address $functionUrl \
     --name $FRONTDOORNAME \
