@@ -22,16 +22,23 @@ echo "creating front door service"
 az network front-door create \
     --backend-address $functionUrl \
     --name $FRONTDOORNAME \
-    --resource-group $RESOURCEGROUPNAME \
+    --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME \
     --backend-host-header $DNSNAME
 echo ""
+
+# this creates the Frontend Host $DNSNAME
+#
+echo "creating frontend host www.abelurlist.club"
+
+
+
 
 # this creates the load balancer for front door frontend
 echo "creating load balancer for front door frontend"
 az network front-door load-balancing create \
     --front-door-name $FRONTDOORNAME \
     --name frontendLoadBalanceSetting \
-    --resource-group $RESOURCEGROUPNAME \
+    --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME \
     --sample-size 4 \
     --successful-samples-required 2
 echo ""
@@ -44,13 +51,13 @@ az network front-door probe create \
     --interval 255 \
     --name frontendHealthProbe \
     --path / \
-    --resource-group $RESOURCEGROUPNAME
+    --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME
 echo ""
 
 # this creates the backend pool frontend
 #
 echo "creating backend pool frontend"
-staticWebsiteUrl="$(az storage account show -n $STORAGEACCOUNTNAME -g $RESOURCEGROUPNAME --query "primaryEndpoints.web" --output tsv)"
+staticWebsiteUrl="$(az storage account show -n $STORAGEACCOUNTNAME -g $IAC_EXCLUSIVE_RESOURCEGROUPNAME --query "primaryEndpoints.web" --output tsv)"
 echo "static website storage's primary endpoint: $staticWebsiteUrl"
 fqdnStaticWebsite="$(awk -F/ '{print $3}' <<<$staticWebsiteUrl)"
 echo "    fqdn of static website: $fqdnStaticWebsite"
@@ -60,7 +67,7 @@ az network front-door backend-pool create \
     --load-balancing frontendLoadBalanceSetting \
     --name frontend \
     --probe frontendHealthProbe \
-    --resource-group $RESOURCEGROUPNAME
+    --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME
 echo ""
 
 
@@ -70,7 +77,7 @@ echo "creating load balancer for front door backend"
 az network front-door load-balancing create \
     --front-door-name $FRONTDOORNAME \
     --name backendLoadBalanceSetting \
-    --resource-group $RESOURCEGROUPNAME \
+    --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME \
     --sample-size 4 \
     --successful-samples-required 2
 echo ""
@@ -83,7 +90,7 @@ az network front-door probe create \
     --interval 255 \
     --name backendHealthProbe \
     --path / \
-    --resource-group $RESOURCEGROUPNAME
+    --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME
 echo ""
 
 # this creates the backend pool backend
@@ -95,7 +102,7 @@ az network front-door backend-pool create \
     --load-balancing backendLoadBalanceSetting \
     --name backend \
     --probe backendHealthProbe \
-    --resource-group $RESOURCEGROUPNAME
+    --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME
 echo ""
 
 # this creates a temp routing rule so we can delete the default created 
@@ -112,7 +119,7 @@ az network front-door routing-rule create \
     --front-door-name $FRONTDOORNAME \
     --frontend-endpoints DefaultFrontendEndpoint \
     --name tempRoutingRule \
-    --resource-group $RESOURCEGROUPNAME \
+    --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME \
     --route-type Forward \
     --patterns /abeltemp/* \
     --backend-pool frontend
@@ -124,7 +131,7 @@ echo "Deleting DefaultRoutingRule"
 az network front-door routing-rule delete \
     --front-door-name $FRONTDOORNAME \
     --name DefaultRoutingRule \
-    --resource-group $RESOURCEGROUPNAME
+    --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME
 echo ""
 
 # this creates the routing rule frontend
@@ -134,7 +141,7 @@ az network front-door routing-rule create \
     --front-door-name $FRONTDOORNAME \
     --frontend-endpoints DefaultFrontendEndpoint \
     --name frontend \
-    --resource-group $RESOURCEGROUPNAME \
+    --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME \
     --route-type Forward \
     --accepted-protocols Http Https \
     --backend-pool frontend \
@@ -147,7 +154,7 @@ echo "Deleting tempRoutingRule"
 az network front-door routing-rule delete \
     --front-door-name $FRONTDOORNAME \
     --name tempRoutingRule \
-    --resource-group $RESOURCEGROUPNAME
+    --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME
 echo ""
 
 # this deletes the DefaultBackendPool
@@ -156,7 +163,7 @@ echo "Deleting DefaultBackendPool"
 az network front-door backend-pool delete \
     --front-door-name $FRONTDOORNAME \
     --name DefaultBackendPool \
-    --resource-group $RESOURCEGROUPNAME
+    --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME
 echo ""
 
 # this creates the routing rule api
@@ -166,7 +173,7 @@ az network front-door routing-rule create \
     --front-door-name $FRONTDOORNAME \
     --frontend-endpoints DefaultFrontendEndpoint \
     --name api \
-    --resource-group $RESOURCEGROUPNAME \
+    --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME \
     --route-type Forward \
     --accepted-protocols Http Https \
     --backend-pool backend \
