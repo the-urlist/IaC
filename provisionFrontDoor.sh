@@ -174,7 +174,7 @@ echo ""
 echo "creating routing rule for frontend"
 az network front-door routing-rule create \
     --front-door-name $IAC_EXCLUSIVE_FRONTDOORNAME \
-    --frontend-endpoints DefaultFrontendEndpoint $IAC_FRIENDLYDNSNAME \
+    --frontend-endpoints DefaultFrontendEndpoint \
     --name frontend \
     --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME \
     --route-type Forward \
