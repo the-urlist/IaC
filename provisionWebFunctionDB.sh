@@ -184,5 +184,5 @@ fi
 # call the correct up  
 for (( i=0; i<=$latestVersion; i++))
 do
-    "$i"_UP
+    "$i"_Up
 done
