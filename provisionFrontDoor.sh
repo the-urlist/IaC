@@ -26,33 +26,33 @@ az network front-door create \
     --backend-host-header $IAC_DNSNAME
 echo ""
 
-# this creates the Frontend Host for domain name. This
-# will leave the front door environment in a broken state. 
-# That's ok for now. Hopefully PG changes how Front Door
-# get's configured. In the mean time, the next step i need
-# to take care of this broken state by creating a routing
-# rule that uses this frontend host
-#
-echo "creating frontend host domain name: $IAC_DNSNAME"
-az network front-door frontend-endpoint create \
-    --front-door-name $IAC_EXCLUSIVE_FRONTDOORNAME \
-    --host-name $IAC_DNSNAME \
-    --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME \
-    --name $IAC_FRIENDLYDNSNAME
-echo ""
+# # this creates the Frontend Host for domain name. This
+# # will leave the front door environment in a broken state. 
+# # That's ok for now. Hopefully PG changes how Front Door
+# # get's configured. In the mean time, the next step i need
+# # to take care of this broken state by creating a routing
+# # rule that uses this frontend host
+# #
+# echo "creating frontend host domain name: $IAC_DNSNAME"
+# az network front-door frontend-endpoint create \
+#     --front-door-name $IAC_EXCLUSIVE_FRONTDOORNAME \
+#     --host-name $IAC_DNSNAME \
+#     --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME \
+#     --name $IAC_FRIENDLYDNSNAME
+# echo ""
 
-# this adds the new front end for the host domain to the default routing rule
-# which fixes the broken state
-#
-echo "re-creating DefaultRoutingRule"
-az network front-door routing-rule create  \
-    --front-door-name $IAC_EXCLUSIVE_FRONTDOORNAME \
-    --name DefaultRoutingRule \
-    --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME \
-    --route-type Forward \
-    --accepted-protocols Https \
-    --frontend-endpoints $IAC_FRIENDLYDNSNAME
-echo ""
+# # this adds the new front end for the host domain to the default routing rule
+# # which fixes the broken state
+# #
+# echo "re-creating DefaultRoutingRule"
+# az network front-door routing-rule create  \
+#     --front-door-name $IAC_EXCLUSIVE_FRONTDOORNAME \
+#     --name DefaultRoutingRule \
+#     --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME \
+#     --route-type Forward \
+#     --accepted-protocols Https \
+#     --frontend-endpoints $IAC_FRIENDLYDNSNAME
+# echo ""
 
 ###########################################################################################################################
 
