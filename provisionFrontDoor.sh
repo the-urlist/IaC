@@ -177,7 +177,7 @@ echo ""
 
 # this creates the routing rule auth
 #
-echo "creating routing rule for api"
+echo "creating routing rule for auth"
 az network front-door routing-rule create \
     --front-door-name $IAC_EXCLUSIVE_FRONTDOORNAME \
     --frontend-endpoints DefaultFrontendEndpoint \
@@ -192,7 +192,7 @@ echo ""
 
 # this creates the routing rule https
 #
-echo "creating routing rule for api"
+echo "creating routing rule for https"
 az network front-door routing-rule create \
     --front-door-name $IAC_EXCLUSIVE_FRONTDOORNAME \
     --frontend-endpoints DefaultFrontendEndpoint \
