@@ -202,7 +202,6 @@ az network front-door routing-rule create \
     --redirect-type Moved \
     --redirect-protocol HttpsOnly \
     --accepted-protocols Http \
-    --patterns /*
 echo ""
 
 # this creates the Frontend Host for domain name. This
