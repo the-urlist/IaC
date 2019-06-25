@@ -26,47 +26,6 @@ az network front-door create \
     --backend-host-header $IAC_DNSNAME
 echo ""
 
-# # this creates the Frontend Host for domain name. This
-# # will leave the front door environment in a broken state. 
-# # That's ok for now. Hopefully PG changes how Front Door
-# # get's configured. In the mean time, the next step i need
-# # to take care of this broken state by creating a routing
-# # rule that uses this frontend host
-# #
-# echo "creating frontend host domain name: $IAC_DNSNAME"
-# az network front-door frontend-endpoint create \
-#     --front-door-name $IAC_EXCLUSIVE_FRONTDOORNAME \
-#     --host-name $IAC_DNSNAME \
-#     --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME \
-#     --name $IAC_FRIENDLYDNSNAME
-# echo ""
-
-# # this adds the new front end for the host domain to the default routing rule
-# # which fixes the broken state
-# #
-# echo "re-creating DefaultRoutingRule"
-# az network front-door routing-rule create  \
-#     --front-door-name $IAC_EXCLUSIVE_FRONTDOORNAME \
-#     --name DefaultRoutingRule \
-#     --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME \
-#     --route-type Forward \
-#     --accepted-protocols Https \
-#     --frontend-endpoints $IAC_FRIENDLYDNSNAME
-# echo ""
-
-
-
-# this enables https for the frontend host
-#
-# echo "enabling https for front end host $IAC_FRIENDLYDNSNAME"
-# az network front-door frontend-endpoint enable-https \
-#     --front-door-name $IAC_EXCLUSIVE_FRONTDOORNAME\
-#     --name $IAC_FRIENDLYDNSNAME\
-#     --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME
-# echo ""
-
-###########################################################################################################################
-
 # this creates the load balancer for front door frontend
 #
 echo "creating load balancer for front door frontend"
@@ -201,17 +160,104 @@ az network front-door backend-pool delete \
     --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME
 echo ""
 
-# # this creates the routing rule api
+# this creates the routing rule api
+#
+echo "creating routing rule for api"
+az network front-door routing-rule create \
+    --front-door-name $IAC_EXCLUSIVE_FRONTDOORNAME \
+    --frontend-endpoints DefaultFrontendEndpoint \
+    --name api \
+    --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME \
+    --route-type Forward \
+    --accepted-protocols Http Https \
+    --backend-pool backend \
+    --forwarding-protocol HttpsOnly \
+    --patterns /api/*
+echo ""
+
+# this creates the routing rule auth
+#
+echo "creating routing rule for api"
+az network front-door routing-rule create \
+    --front-door-name $IAC_EXCLUSIVE_FRONTDOORNAME \
+    --frontend-endpoints DefaultFrontendEndpoint \
+    --name auth \
+    --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME \
+    --route-type Forward \
+    --accepted-protocols Http Https \
+    --backend-pool backend \
+    --forwarding-protocol HttpsOnly \
+    --patterns /.auth/*
+echo ""
+
+# this creates the routing rule https
+#
+echo "creating routing rule for api"
+az network front-door routing-rule create \
+    --front-door-name $IAC_EXCLUSIVE_FRONTDOORNAME \
+    --frontend-endpoints DefaultFrontendEndpoint \
+    --name https \
+    --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME \
+    --route-type Redirect \
+    --redirect-type Moved \
+    --redirect-protocol HttpsOnly \
+    --accepted-protocols Http \
+    --patterns /*
+echo ""
+
+# this creates the Frontend Host for domain name. This
+# will leave the front door environment in a broken state. 
+# That's ok for now. Hopefully PG changes how Front Door
+# get's configured. In the mean time, the next step i need
+# to take care of this broken state by creating a routing
+# rule that uses this frontend host
+#
+echo "creating frontend host domain name: $IAC_DNSNAME"
+az network front-door frontend-endpoint create \
+    --front-door-name $IAC_EXCLUSIVE_FRONTDOORNAME \
+    --host-name $IAC_DNSNAME \
+    --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME \
+    --name $IAC_FRIENDLYDNSNAME
+echo ""
+
+# this creates the routing rule frontend which has a front end endoint
+# pointed by the new Frontend host that i created
+#
+echo "creating routing rule for frontend"
+az network front-door routing-rule create \
+    --front-door-name $IAC_EXCLUSIVE_FRONTDOORNAME \
+    --frontend-endpoints DefaultFrontendEndpoint $IAC_FRIENDLYDNSNAME\
+    --name frontend \
+    --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME \
+    --route-type Forward \
+    --accepted-protocols Https \
+    --backend-pool frontend \
+    --forwarding-protocol HttpsOnly
+echo ""
+
+# this enables https for the frontend host
+#
+echo "enabling https for front end host $IAC_FRIENDLYDNSNAME"
+az network front-door frontend-endpoint enable-https \
+    --front-door-name $IAC_EXCLUSIVE_FRONTDOORNAME\
+    --name $IAC_FRIENDLYDNSNAME\
+    --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME
+echo ""
+
+
+
+# # this adds the new front end for the host domain to the default routing rule
+# # which fixes the broken state
 # #
-# echo "creating routing rule for api"
-# az network front-door routing-rule create \
+# echo "re-creating DefaultRoutingRule"
+# az network front-door routing-rule create  \
 #     --front-door-name $IAC_EXCLUSIVE_FRONTDOORNAME \
-#     --frontend-endpoints DefaultFrontendEndpoint \
-#     --name api \
+#     --name DefaultRoutingRule \
 #     --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME \
 #     --route-type Forward \
-#     --accepted-protocols Http Https \
-#     --backend-pool backend \
-#     --forwarding-protocol HttpsOnly \
-#     --patterns /api/*
+#     --accepted-protocols Https \
+#     --frontend-endpoints $IAC_FRIENDLYDNSNAME
 # echo ""
+
+
+
