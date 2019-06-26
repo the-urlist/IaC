@@ -13,9 +13,9 @@ az extension add \
 
 # this enables https for the custom domain front end host
 #
-echo "enabling https for front end host $IAC_FRIENDLYDNSNAME"
-az network front-door frontend-endpoint enable-https \
-    --front-door-name $IAC_EXCLUSIVE_FRONTDOORNAME \
-    --name $IAC_FRIENDLYDNSNAME \
-    --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME
-echo ""
+# echo "enabling https for front end host $IAC_FRIENDLYDNSNAME"
+# az network front-door frontend-endpoint enable-https \
+#     --front-door-name $IAC_EXCLUSIVE_FRONTDOORNAME \
+#     --name $IAC_FRIENDLYDNSNAME \
+#     --resource-group $IAC_EXCLUSIVE_RESOURCEGROUPNAME
+# echo ""
