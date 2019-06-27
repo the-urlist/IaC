@@ -45,7 +45,10 @@
                             "frontendEndpoints": [
                                 {
                                     "id": "[resourceId('Microsoft.Network/frontDoors/frontendEndpoints', parameters('frontDoorName'), 'frontendEndpoint1')]"
-                                }
+                                },
+                                {
+                                    "id": "[resourceId('Microsoft.Network/frontDoors/frontendEndpoints', parameters('frontDoorName'), 'www-abelurlist-club')]"
+                                }  
                             ],
                             "acceptedProtocols": [
                                 "Https"
@@ -69,7 +72,10 @@
                             "frontendEndpoints": [
                                 {
                                     "id": "[resourceId('Microsoft.Network/frontDoors/frontendEndpoints', parameters('frontDoorName'), 'frontendEndpoint1')]"
-                                }
+                                },
+                                {
+                                    "id": "[resourceId('Microsoft.Network/frontDoors/frontendEndpoints', parameters('frontDoorName'), 'www-abelurlist-club')]"
+                                }  
                             ],
                             "acceptedProtocols": [
                                 "Https",
@@ -94,7 +100,10 @@
                             "frontendEndpoints": [
                                 {
                                     "id": "[resourceId('Microsoft.Network/frontDoors/frontendEndpoints', parameters('frontDoorName'), 'frontendEndpoint1')]"
-                                }
+                                },
+                                {
+                                    "id": "[resourceId('Microsoft.Network/frontDoors/frontendEndpoints', parameters('frontDoorName'), 'www-abelurlist-club')]"
+                                }  
                             ],
                             "acceptedProtocols": [
                                 "Https",
@@ -119,7 +128,10 @@
                             "frontendEndpoints": [
                                 {
                                     "id": "[resourceId('Microsoft.Network/frontDoors/frontendEndpoints', parameters('frontDoorName'), 'frontendEndpoint1')]"
-                                }
+                                },
+                                {
+                                    "id": "[resourceId('Microsoft.Network/frontDoors/frontendEndpoints', parameters('frontDoorName'), 'www-abelurlist-club')]"
+                                }  
                             ],
                             "acceptedProtocols": [
                                 "Http"
@@ -219,6 +231,13 @@
                         "name": "frontendEndpoint1",
                         "properties": {
                             "hostName": "[concat(parameters('frontDoorName'), '.azurefd.net')]",
+                            "sessionAffinityEnabledState": "Disabled"
+                        }
+                    },
+                    {
+                        "name": "www-abelurlist-club",
+                        "properties": {
+                            "hostName": "[parameters('customDomainName')]",
                             "sessionAffinityEnabledState": "Disabled"
                         }
                     }
