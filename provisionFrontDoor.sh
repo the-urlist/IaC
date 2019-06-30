@@ -49,6 +49,9 @@ echo ""
 if [  $CURRENTVERSION >= $LATERSTVERSION ] ;
 then
     echo "infrastructure version up to date"
+else 
+    echo "current infrastructure version: $CURRENTVERSION"
+    echo "updating infrastructure to version: $LATESTVERSION"
 fi
 for (( i=($CURRENTVERSION); i<LATESTVERSION; i++))
 do
