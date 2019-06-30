@@ -187,7 +187,11 @@ fi
 echo ""
 
 # call the correct up  
-for (( i=($CURRENTVERSION+1); i<=LATESTVERSION; i++))
+if [  $CURRENTVERSION >= $LATERSTVERSION ] ;
+then
+    echo "infrastructure version up to date"
+fi
+for (( i=($CURRENTVERSION); i<LATESTVERSION; i++))
 do
     echo "executing $i""_Up()"
     "$i"_Up
