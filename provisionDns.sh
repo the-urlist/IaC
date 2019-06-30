@@ -205,7 +205,7 @@
 # The latest version variable needs to be manually updated each time you
 # add a new Up function.
 #
-LATESTVERSION=1;
+LATESTVERSION=2;
 CURRENTVERSION=0
 # get current version of infrastructure
 echo "getting infrastructure version"
