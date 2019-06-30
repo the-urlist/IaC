@@ -51,6 +51,7 @@ do
     echo "executing $i""_Up()"
     "$i"_Up
     # register new version of infrastructure deployed
+    echo "registering new version of infrastructure"
 	curlResponse="$(curl --request GET "https://$IAC_EXCLUSIVE_INFRATOOLSFUNCTIONNAME.azurewebsites.net/api/InfraVersionUpdater?tablename=abelurlist&stage=beta&infraname=frontdoor")"
 	echo "curl response: $curlResponse"
 done
