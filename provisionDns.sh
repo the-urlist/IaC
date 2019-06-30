@@ -228,7 +228,7 @@ else
     echo "current infrastructure version: $CURRENTVERSION"
     echo "updating infrastructure to version: $LATESTVERSION"
 fi
-for (( i=($CURRENTVERSION); i<LATESTVERSION; i++))
+for (( i=($CURRENTVERSION+1); i<=LATESTVERSION; i++))
 do
     echo "executing $i""_Up()"
     "$i"_Up
