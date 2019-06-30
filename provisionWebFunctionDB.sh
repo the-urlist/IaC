@@ -187,18 +187,19 @@ fi
 echo "current infrastructure version: $CURRENTVERSION"
 
 # call the correct up  
-if [  $CURRENTVERSION >= $LATERSTVERSION ] ;
+if [  $CURRENTVERSION >= $LATESTVERSION ] ;
 then
     echo "infrastructure version up to date"
 else 
     echo "current infrastructure version: $CURRENTVERSION"
     echo "updating infrastructure to version: $LATESTVERSION"
 fi
-for (( i=($CURRENTVERSION+1); i<=LATESTVERSION; i++))
+for (( i=($CURRENTVERSION+1); i<=$LATESTVERSION; i++))
 do
     echo "executing $i""_Up()"
     "$i"_Up
     # register new version of infrastructure deployed
+    echo "done with $i""_Up()"
     echo "registering new version of infrastructure"
 	curlResponse="$(curl --request GET "https://$IAC_EXCLUSIVE_INFRATOOLSFUNCTIONNAME.azurewebsites.net/api/InfraVersionUpdater?tablename=abelurlist&stage=beta&infraname=webfunctiondb")"
 	echo "curl response: $curlResponse"
