@@ -225,15 +225,15 @@ if [  $CURRENTVERSION -ge $LATESTVERSION ] ;
 then
     echo "infrastructure version up to date"
 else 
-    echo "current infrastructure version: $CURRENTVERSION"
     echo "updating infrastructure to version: $LATESTVERSION"
 fi
-for (( i=$((CURRENTVERSION + 1)); i<=$LATESTVERSION; i++))
+
+for (( methodIndex=$((CURRENTVERSION + 1)); i<=$LATESTVERSION; methodIndex++ ))
 do
-    echo "executing $i""_Up()"
-    "$i"_Up
+    echo "executing $methodIndex""_Up()"
+    "$methodIndex"_Up
     # register new version of infrastructure deployed
-    echo "done with $i""_Up()"
+    echo "done with $methodIndex""_Up()"
     echo "registering new version of infrastructure"
 	curlResponse="$(curl --request GET "https://$IAC_EXCLUSIVE_INFRATOOLSFUNCTIONNAME.azurewebsites.net/api/InfraVersionUpdater?tablename=abelurlist&stage=beta&infraname=dns")"
 	echo "curl response: $curlResponse"
