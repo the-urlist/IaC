@@ -187,6 +187,7 @@
             --header "X-Auth-Email: $CLOUDFLAREEMAIL" \
             --header "X-Auth-Key: $CLOUDFLAREKEY"
     done
+    echo ""
 
     # Add in the apex domain rule
     #
@@ -196,8 +197,9 @@
         --header "X-Auth-Key: $CLOUDFLAREKEY" \
         --header "Content-Type: application/json" \
         --data '{"targets":[{"target":"url", "constraint":{"operator":"matches","value":"abelurlist.club/*"}}],"actions":[{"id":"forwarding_url","value": {"url": "https://www.abelurlist.club/$1","status_code": 301}}],"priority":1,"status":"active"}'
-
-
+    echo ""
+    echo "done adding apex domain rule"
+    echo ""
 }
 
 # This queries the environment for the current version and then applies only 
@@ -235,7 +237,9 @@ do
     echo "done with $methodIndex""_Up()"
     
     # register new version of infrastructure deployed
+    echo ""
     echo "registering new version of infrastructure"
 	curlResponse="$(curl --request GET "https://$IAC_EXCLUSIVE_INFRATOOLSFUNCTIONNAME.azurewebsites.net/api/InfraVersionUpdater?tablename=abelurlist&stage=beta&infraname=dns")"
-	echo "curl response: $curlResponse"
+	echo ""
+    echo "curl response: $curlResponse"
 done
