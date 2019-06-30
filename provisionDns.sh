@@ -90,10 +90,9 @@ then
     echo "curl response is empty, setting current version to 0"
 	CURRENTVERSION=0
 else
-    echo "curl response not empty: $curlResponse"
 	CURRENTVERSION=$curlResponse
 fi
-echo ""
+echo "current infrastructure version: $CURRENTVERSION"
 
 # call the correct up  
 if [  $CURRENTVERSION >= $LATERSTVERSION ] ;
