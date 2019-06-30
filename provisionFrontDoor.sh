@@ -46,14 +46,14 @@ fi
 echo "current infrastructure version: $CURRENTVERSION"
 
 # call the correct up  
-if [  $CURRENTVERSION >= $LATESTVERSION ] ;
+if [  $CURRENTVERSION -ge $LATESTVERSION ] ;
 then
     echo "infrastructure version up to date"
 else 
     echo "current infrastructure version: $CURRENTVERSION"
     echo "updating infrastructure to version: $LATESTVERSION"
 fi
-for (( i=($CURRENTVERSION+1); i<=$LATESTVERSION; i++))
+for (( i=$((CURRENTVERSION + 1)); i<=$LATESTVERSION; i++))
 do
     echo "executing $i""_Up()"
     "$i"_Up
