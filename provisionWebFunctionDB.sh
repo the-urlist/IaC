@@ -2,11 +2,11 @@
 # Azure Pipelines
 #
 
-# this defines my time 0 up function which will deploy and configure the infrastructure 
+# this defines my time 1 up function which will deploy and configure the infrastructure 
 # for the static web app held in blob storage, the azure function and cosmos
 # DB
 #
-0_Up() {
+1_Up() {
     # This creates the resource group used to house all of the URList application
     #
     echo "Creating resource group $IAC_EXCLUSIVE_RESOURCEGROUPNAME in region $IAC_RESOURCEGROUPREGION"
@@ -171,18 +171,27 @@
 # The latest version variable needs to be manually updated each time you
 # add a new Up function.
 #
-latestVersion=0
-currVersion=null
-
-# NEED TO ADD THIS - call a rest api or something to get current deployed version
-
-if [ $currVersion = null ] ;
+LATESTVERSION=1;
+CURRENTVERSION=0
+# get current version of infrastructure
+curlResponse="$(curl --max-time 12 --request GET "https://$IAC_EXCLUSIVE_INFRATOOLSFUNCTIONNAME.azurewebsites.net/api/InfraVersionRetriever?tablename=abelurlist&stage=beta&infraname=webfunctiondb")"
+echo "curlResponce: $curlResponse"
+if [ -z $curlResponse ] ;
 then
-    currVersion=0
+    echo "curl response is empty, setting current version to 0"
+	CURRENTVERSION=0
+else
+    echo "curl response not empty: $curlResponse"
+	CURRENTVERSION=$curlResponse
 fi
+echo ""
 
 # call the correct up  
-for (( i=0; i<=$latestVersion; i++))
+for (( i=($CURRENTVERSION+1); i<=LATESTVERSION; i++))
 do
+    echo "executing $i""_Up()"
     "$i"_Up
+    # register new version of infrastructure deployed
+	curlResponse="$(curl --request GET "https://$IAC_EXCLUSIVE_INFRATOOLSFUNCTIONNAME.azurewebsites.net/api/InfraVersionUpdater?tablename=abelurlist&stage=beta&infraname=webfunctiondb")"
+	echo "curl response: $curlResponse"
 done
