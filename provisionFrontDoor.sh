@@ -33,6 +33,7 @@
 LATESTVERSION=1;
 CURRENTVERSION=0
 # get current version of infrastructure
+echo "getting infrastructure version"
 curlResponse="$(curl --max-time 12 --request GET "https://$IAC_EXCLUSIVE_INFRATOOLSFUNCTIONNAME.azurewebsites.net/api/InfraVersionRetriever?tablename=abelurlist&stage=beta&infraname=frontdoor")"
 echo "curlResponce: $curlResponse"
 if [ -z $curlResponse ] ;
