@@ -228,12 +228,13 @@ else
     echo "updating infrastructure to version: $LATESTVERSION"
 fi
 
-for (( methodIndex=$((CURRENTVERSION + 1)); i<=$LATESTVERSION; methodIndex++ ))
+for (( methodIndex=$((CURRENTVERSION + 1)); methodIndex<=$LATESTVERSION; methodIndex++ ))
 do
     echo "executing $methodIndex""_Up()"
     "$methodIndex"_Up
-    # register new version of infrastructure deployed
     echo "done with $methodIndex""_Up()"
+    
+    # register new version of infrastructure deployed
     echo "registering new version of infrastructure"
 	curlResponse="$(curl --request GET "https://$IAC_EXCLUSIVE_INFRATOOLSFUNCTIONNAME.azurewebsites.net/api/InfraVersionUpdater?tablename=abelurlist&stage=beta&infraname=dns")"
 	echo "curl response: $curlResponse"
