@@ -202,6 +202,8 @@
     echo ""
 }
 
+
+
 # This queries the environment for the current version and then applies only 
 # the changes necessary to bring the environment up to the latest version.
 # The latest version variable needs to be manually updated each time you
