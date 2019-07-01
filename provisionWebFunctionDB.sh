@@ -166,19 +166,7 @@
 }
 
 
-# This queries the environment for the current version and then applies only 
-# the changes necessary to bring the environment up to the latest version.
-# The latest version variable needs to be manually updated each time you
-# add a new Up function. Need to pass in these two parameters:
-#
-# INFRAME - local variable used to idenityf the infrastructure name.
-#           This value is stored in the DB as row key
-#
-# LATESTVERSION - local vaiable used to identify the latest version held
-#                 in this script. This needs to be manually updated
-#                 each time a new version Up method is created
+# This updates the infrastructure version up to the correct
+# version
 #
 source ./versionFramework.sh
-INFRANAME="webdbfunc"
-LATESTVERSION=1;
-updateVersion $INFRANAME $LATESTVERSION

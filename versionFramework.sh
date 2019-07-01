@@ -51,3 +51,13 @@ updateVersion() {
         echo "curl response: $curlResponse"
     done
 }
+
+# this gets a list of all functions and parses for the num_Up() methods
+# This helps determine latest version number. This also gets the name
+# of the source file to use as the infrastructure id
+#
+allFunctions="$(declare -F)"
+latestVersion="$(echo $allFunctions | grep -oP "\d_Up" | wc -l)"
+sourceFile="$(basename "$0")"
+
+updateVersion $sourceFile $latestVersion 
