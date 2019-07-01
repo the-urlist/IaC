@@ -182,39 +182,3 @@ source ./versionFramework.sh
 INFRANAME="webdbfunc"
 LATESTVERSION=1;
 updateVersion $INFRANAME $LATESTVERSION
-
-# # get current version of infrastructure
-# CURRENTVERSION=0
-# echo "getting infrastructure version"
-# curlResponse="$(curl --max-time 12 --request GET "https://$IAC_EXCLUSIVE_INFRATOOLSFUNCTIONNAME.azurewebsites.net/api/InfraVersionRetriever?tablename=$IAC_INFRATABLENAME&stage=$IAC_DEPLOYMENTSTAGE&infraname=$INFRANAME")"
-# echo "curlResponce: $curlResponse"
-# if [ -z $curlResponse ] ;
-# then
-#     echo "curl response is empty, setting current version to 0"
-# 	CURRENTVERSION=0
-# else
-# 	CURRENTVERSION=$curlResponse
-# fi
-# echo "current infrastructure version: $CURRENTVERSION"
-
-# # call the correct up  
-# if [  $CURRENTVERSION -ge $LATESTVERSION ] ;
-# then
-#     echo "infrastructure version up to date"
-# else 
-#     echo "current infrastructure version: $CURRENTVERSION"
-#     echo "updating infrastructure to version: $LATESTVERSION"
-# fi
-# for (( methodIndex=$((CURRENTVERSION + 1)); methodIndex<=$LATESTVERSION; methodIndex++))
-# do
-#     echo "executing $methodIndex""_Up()"
-#     "$methodIndex"_Up
-#     echo "done with $methodIndex""_Up()"
-
-#     # register new version of infrastructure deployed
-#     echo ""
-#     echo "registering new version of infrastructure"
-# 	curlResponse="$(curl --request GET "https://$IAC_EXCLUSIVE_INFRATOOLSFUNCTIONNAME.azurewebsites.net/api/InfraVersionUpdater?tablename=$IAC_INFRATABLENAME&stage=$IAC_DEPLOYMENTSTAGE&infraname=$INFRANAME")"
-# 	echo ""
-#     echo "curl response: $curlResponse"
-# done
