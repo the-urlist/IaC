@@ -30,11 +30,23 @@
 # The latest version variable needs to be manually updated each time you
 # add a new Up function.
 #
+# INFRAME - local variable used to idenityf the infrastructure name.
+#           This value is stored in the DB as row key
+#
+# LATESTVERSION - local vaiable used to identify the latest version held
+#                 in this script. This needs to be manually updated
+#                 each time a new version Up method is created
+#
+INFRANAME="frontdoor"
 LATESTVERSION=1;
-CURRENTVERSION=0
+
+
+# BEGIN COPY 
 # get current version of infrastructure
+#
+CURRENTVERSION=0
 echo "getting infrastructure version"
-curlResponse="$(curl --max-time 12 --request GET "https://$IAC_EXCLUSIVE_INFRATOOLSFUNCTIONNAME.azurewebsites.net/api/InfraVersionRetriever?tablename=abelurlist&stage=beta&infraname=frontdoor")"
+curlResponse="$(curl --max-time 12 --request GET "https://$IAC_EXCLUSIVE_INFRATOOLSFUNCTIONNAME.azurewebsites.net/api/InfraVersionRetriever?tablename=$IAC_INFRATABLENAME&stage=$IAC_DEPLOYMENTSTAGE&infraname=$INFRANAME")"
 echo "curlResponce: $curlResponse"
 if [ -z $curlResponse ] ;
 then
@@ -62,7 +74,8 @@ do
     # register new version of infrastructure deployed
     echo ""
     echo "registering new version of infrastructure"  
-	curlResponse="$(curl --request GET "https://$IAC_EXCLUSIVE_INFRATOOLSFUNCTIONNAME.azurewebsites.net/api/InfraVersionUpdater?tablename=abelurlist&stage=beta&infraname=frontdoor")"
+	curlResponse="$(curl --request GET "https://$IAC_EXCLUSIVE_INFRATOOLSFUNCTIONNAME.azurewebsites.net/api/InfraVersionUpdater?tablename=$IAC_INFRATABLENAME&stage=$IAC_DEPLOYMENTSTAGE&infraname=$INFRANAME")"
 	echo ""
     echo "curl response: $curlResponse"
 done
+# END COPY
