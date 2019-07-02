@@ -1,4 +1,9 @@
-# this configures DNS with the right values
+# The variables used in the this script are passed in as environment variables by
+# Azure Pipelines
+#
+
+# this defines my time 1 up function which will deploy and configure the infrastructure 
+# for my DNS settings up in cloud flare
 #
 1_Up() {
     # this lists all dns records from cloudflare
@@ -74,8 +79,8 @@
     fi
 }
 
-# This script sets up the apex domain url (no www)in dns to point and direct
-# to the right place
+# This brings my infrastructure up to version 2 where it sets up the apex domain url (no www)
+# in dns to point and direct to the right place
 #
 2_Up() {
     # this lists all dns records from cloudflare

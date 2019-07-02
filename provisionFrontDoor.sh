@@ -1,7 +1,10 @@
-# this creates and configures a front door resource using an 
-# ARM template
+# The variables used in the this script are passed in as environment variables by
+# Azure Pipelines
 #
 
+# this defines my time 1 up function which will deploy and configure the infrastructure 
+# for Front Door using an ARM template
+#
 1_Up() {
     # this creates front door from arm template
     # 
