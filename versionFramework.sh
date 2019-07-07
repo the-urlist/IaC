@@ -10,7 +10,6 @@
 #                 in this script. This needs to be manually updated
 #                 each time a new version Up method is created
 #
-
 updateVersion() {
     INFRANAME=$1
     LATESTVERSION=$2
@@ -52,9 +51,9 @@ updateVersion() {
     done
 }
 
-# this gets a list of all functions and parses for the num_Up() methods
-# This helps determine latest version number. This also gets the name
-# of the source file to use as the infrastructure id
+# this figures out the latest version in the IaC shell script 
+# file. This also figures out the name of the file. These two values will
+# then be used by the updateVersion function.
 #
 allFunctions="$(declare -F)"
 latestVersion="$(echo $allFunctions | grep -oP "\d_Up" | wc -l)"
