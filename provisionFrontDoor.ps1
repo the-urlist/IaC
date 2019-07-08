@@ -109,6 +109,9 @@ function 1_Up {
     Write-Output ""
 }
 
+function 2_Up {
+    Write-Output "FUCK!!!"
+}
 
 Install-Module -Name VersionInfrastructure -Force -Scope CurrentUser
 Update-InfrastructureVersion
