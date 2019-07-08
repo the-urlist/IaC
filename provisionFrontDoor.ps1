@@ -78,14 +78,15 @@ function 1_Up {
     # this creates front door from an arm template. Ironically, there are some stuff in front door
     # that can't be configured by the Azure CLI at this moment. 
     # 
-    Write-Outpout "creating Front Door: $frontDoorName..."
+    Write-Output "creating Front Door: $frontDoorName..."
     az group deployment create `
         --name azuredeployfd `
         --resource-group $resourceGroupName `
         --template-file "$agentReleaseDirectory/AbelIaCBuild/drop/frontdoorazuredeploy.json" `
         --parameters frontDoorName=$frontDoorName `
                     backendPool1Address1="$urlistWebStorageName.z21.web.core.windows.net" `
-                    backendPool2Address1="$urlistBackendFunctionName.azurewebsites.net" customDomainName="$dnsName"
+                    backendPool2Address1="$urlistBackendFunctionName.azurewebsites.net" `
+                    customDomainName="$dnsName"
     Write-Output "Done creating Front Door"
     Write-Output ""
 
@@ -104,8 +105,8 @@ function 1_Up {
         --front-door-name $frontDoorName `
         --name $friendlyDnsName `
         --resource-group $resourceGroupName
-    Write-Output "Done enablikng https"
-    Write-Outpujt ""
+    Write-Output "Done enabling https"
+    Write-Output ""
 }
 
 
