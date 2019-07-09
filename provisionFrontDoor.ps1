@@ -113,5 +113,12 @@ function 2_Up {
     Write-Output "FUCK!!!"
 }
 
+function 3_Up {
+    Write-Output "Got to 3 up bitches!!!!!"
+}
+
 Install-Module -Name VersionInfrastructure -Force -Scope CurrentUser
-Update-InfrastructureVersion
+Update-InfrastructureVersion `
+    -infraToolsFunctionName $Env:IAC_EXCLUSIVE_INFRATOOLSSTORAGENAME `
+    -infraToolsTableName $Env:IAC_INFRATABLENAME `
+    -deploymentStage $Env:IAC_DEPLOYMENTSTAGE
