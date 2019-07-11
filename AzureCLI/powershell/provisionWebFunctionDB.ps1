@@ -152,7 +152,7 @@ function 1_Up {
 
     # This sets the storage account so it can host a static website
     #
-    Write-Ouput "adding storage preview to CLI..."
+    Write-Output "adding storage preview to CLI..."
     az extension add `
         --name storage-preview
     Write-Output "Done adding storage preview to CLI"
@@ -197,82 +197,82 @@ function 1_Up {
     Write-Output "done creating container collection"
     Write-Output ""
 
-    # # this creates a storage account for our back end azure function to maintain
-    # # state and other info for the function
-    # # 
-    # Write-Output "create a storage account for function to maintain state and other info for the function..."
-    # az storage account create `
-    #     --name $functionStorageAccountName `
-    #     --location $functionStorageAccountRegion `
-    #     --resource-group $resourceGroupName `
-    #     --sku $webStorageAccountSku
-    # Write-Output "done creating storage account for function"
-    # Write-Output ""
+    # this creates a storage account for our back end azure function to maintain
+    # state and other info for the function
+    # 
+    Write-Output "create a storage account for function to maintain state and other info for the function..."
+    az storage account create `
+        --name $functionStorageAccountName `
+        --location $functionStorageAccountRegion `
+        --resource-group $resourceGroupName `
+        --sku $webStorageAccountSku
+    Write-Output "done creating storage account for function"
+    Write-Output ""
 
-    # # this creates the function app used to host the back end function
-    # #
-    # Write-Outpuot "create the function app for the back end..."
-    # az functionapp create `
-    #     --resource-group $resourceGroupName `
-    #     --consumption-plan-location $functionConsumptionPlanRegion `
-    #     --name $functionName `
-    #     --storage-account $functionStorageAccountName `
-    #     --runtime dotnet
-    # Write-Output "done creating function app"
-    # Write-Output ""
+    # this creates the function app used to host the back end function
+    #
+    Write-Outpuot "create the function app for the back end..."
+    az functionapp create `
+        --resource-group $resourceGroupName `
+        --consumption-plan-location $functionConsumptionPlanRegion `
+        --name $functionName `
+        --storage-account $functionStorageAccountName `
+        --runtime dotnet
+    Write-Output "done creating function app"
+    Write-Output ""
 
-    # # this grabs the static website storage primary endpoint to be used when
-    # # setting the authentication of the function
-    # Write-Output "getting the static website storage's primary endpoint..."
-    # $staticWebsiteUrl=$(az storage account show -n $webStorageAccountName -g $resourceGroupName --query "primaryEndpoints.web" --output tsv)
-    # Write-Output "done getting static websites endpoint: $staticWebsiteUrl"
-    # Write-Output ""
+    # this grabs the static website storage primary endpoint to be used when
+    # setting the authentication of the function
+    Write-Output "getting the static website storage's primary endpoint..."
+    $staticWebsiteUrl=$(az storage account show -n $webStorageAccountName -g $resourceGroupName --query "primaryEndpoints.web" --output tsv)
+    Write-Output "done getting static websites endpoint: $staticWebsiteUrl"
+    Write-Output ""
 
-    # # this sets authentication to be on and to use twitter for the back end
-    # # function, also sets the allowed external redirect urls to be the
-    # # static website storage primary endpoint
-    # #
-    # Write-Output "setting authentication for the azure function app back end..."
-    # az webapp auth update `
-    #     --name $functionName `
-    #     --resource-group $resourceGroupName `
-    #     --enabled true `
-    #     --action LoginWithTwitter `
-    #     --twitter-consumer-key $twitterConsumerKey `
-    #     --twitter-consumer-secret $twitterPrivateKey `
-    #     --allowed-external-redirect-urls $staticWebsiteUrl
-    # Write-Output "done setting authentication to the azure function"
-    # Write-Output ""
+    # this sets authentication to be on and to use twitter for the back end
+    # function, also sets the allowed external redirect urls to be the
+    # static website storage primary endpoint
+    #
+    Write-Output "setting authentication for the azure function app back end..."
+    az webapp auth update `
+        --name $functionName `
+        --resource-group $resourceGroupName `
+        --enabled true `
+        --action LoginWithTwitter `
+        --twitter-consumer-key $twitterConsumerKey `
+        --twitter-consumer-secret $twitterPrivateKey `
+        --allowed-external-redirect-urls $staticWebsiteUrl
+    Write-Output "done setting authentication to the azure function"
+    Write-Output ""
 
-    # # this creates an instance of appliction insight
-    # #
-    # Write-Output "creating application insight for the function..."
-    # $appInsightCreateResponse=$(az resource create `
-    #     --resource-group $resourceGroupName `
-    #     --resource-type "Microsoft.Insights/components" `
-    #     --name $functionAppInsightName `
-    #     --location $functionAppInsightRegion `
-    #     --properties '{"Application_Type":"web"}') | ConvertFrom-Json
-    # Write-Output "done creating app insight, response: $appInsightCreateResponse"
-    # Write-Output ""
+    # this creates an instance of appliction insight
+    #
+    Write-Output "creating application insight for the function..."
+    $appInsightCreateResponse=$(az resource create `
+        --resource-group $resourceGroupName `
+        --resource-type "Microsoft.Insights/components" `
+        --name $functionAppInsightName `
+        --location $functionAppInsightRegion `
+        --properties '{"Application_Type":"web"}') | ConvertFrom-Json
+    Write-Output "done creating app insight, response: $appInsightCreateResponse"
+    Write-Output ""
 
-    # # this gets the instrumentation key from the create response
-    # #
-    # Write-Output "getting instrumentation key from the create response..."
-    # $instrumentationKey = $appInsightCreateResponse.properties.InstrumentationKey
-    # Write-Output "cone getting instrumentation key"
-    # Write-Output ""
+    # this gets the instrumentation key from the create response
+    #
+    Write-Output "getting instrumentation key from the create response..."
+    $instrumentationKey = $appInsightCreateResponse.properties.InstrumentationKey
+    Write-Output "cone getting instrumentation key"
+    Write-Output ""
 
-    # # this wires up application insights to the function
-    # # echo "wiring up app insight to function"
-    # #
-    # Write-Output "setting application insight to the function..."
-    # az functionapp config appsettings set `
-    #     --name $functionName `
-    #     --resource-group $resourceGroupName `
-    #     --settings "APPINSIGHTS_INSTRUMENTATIONKEY = $instrumentationKey"
-    # Write-Output "done setting application insight to the function"
-    # Write-Output ""
+    # this wires up application insights to the function
+    # echo "wiring up app insight to function"
+    #
+    Write-Output "setting application insight to the function..."
+    az functionapp config appsettings set `
+        --name $functionName `
+        --resource-group $resourceGroupName `
+        --settings "APPINSIGHTS_INSTRUMENTATIONKEY = $instrumentationKey"
+    Write-Output "done setting application insight to the function"
+    Write-Output ""
 }
 
 Install-Module -Name VersionInfrastructure -Force -Scope CurrentUser
