@@ -134,8 +134,8 @@ function 1_Up {
     az group create `
         --name $resourceGroupName `
         --location $resourceGroupNameRegion
-    Write-Outpout "Done creating resource group"
-    Write-Outpout ""
+    Write-Output "Done creating resource group"
+    Write-Output ""
 
     # This creates a storage account to host our static web site
     #
@@ -147,7 +147,7 @@ function 1_Up {
         --sku "$webStorageAccountSku" `
         --kind StorageV2
     Write-Output "Done creating storage account"
-    Write-Outpout ""
+    Write-Output ""
 
     # This sets the storage account so it can host a static website
     #
@@ -162,7 +162,7 @@ function 1_Up {
         --404-document $webErrorDocName `
         --index-document $webIndexPage
     Write-Output "Done enabling static website hosting in storage account"
-    Write-Outpout ""
+    Write-Output ""
 
     # this create a SQL API Cosmos DB account 
     #
@@ -222,7 +222,7 @@ function 1_Up {
 
     # this grabs the static website storage primary endpoint to be used when
     # setting the authentication of the function
-    Write-Outpout "getting the static website storage's primary endpoint..."
+    Write-Output "getting the static website storage's primary endpoint..."
     $staticWebsiteUrl=$(az storage account show -n $webStorageAccountName -g $resourceGroupName --query "primaryEndpoints.web" --output tsv)
     Write-Output "done getting static websites endpoint: $staticWebsiteUrl"
     Write-Output ""
@@ -231,7 +231,7 @@ function 1_Up {
     # function, also sets the allowed external redirect urls to be the
     # static website storage primary endpoint
     #
-    Write-Outpout "setting authentication for the azure function app back end..."
+    Write-Output "setting authentication for the azure function app back end..."
     az webapp auth update `
         --name $functionName `
         --resource-group $resourceGroupName `
@@ -260,7 +260,7 @@ function 1_Up {
     Write-Output "getting instrumentation key from the create response..."
     $instrumentationKey = $appInsightCreateResponse.properties.InstrumentationKey
     Write-Output "cone getting instrumentation key"
-    Write-Outpout ""
+    Write-Output ""
 
     # this wires up application insights to the function
     # echo "wiring up app insight to function"
@@ -271,7 +271,7 @@ function 1_Up {
         --resource-group $resourceGroupName `
         --settings "APPINSIGHTS_INSTRUMENTATIONKEY = $instrumentationKey"
     Write-Output "done setting application insight to the function"
-    Write-Outpout ""
+    Write-Output ""
 }
 
 Install-Module -Name VersionInfrastructure -Force -Scope CurrentUser
