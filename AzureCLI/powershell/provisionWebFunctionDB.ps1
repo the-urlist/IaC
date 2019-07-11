@@ -151,7 +151,7 @@ function 1_Up {
 
     # This sets the storage account so it can host a static website
     #
-    Write-Otuput "adding storage preview to CLI..."
+    Write-Ouput "adding storage preview to CLI..."
     az extension add `
         --name storage-preview
     Write-Output "Done adding storage preview to CLI"
