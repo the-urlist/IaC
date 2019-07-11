@@ -252,7 +252,7 @@ function 1_Up {
         --resource-type "Microsoft.Insights/components" `
         --name $functionAppInsightName `
         --location $functionAppInsightRegion `
-        --properties '{"Application_Type":"web"}') | ConvertFrom-Json
+        --properties '{\"Application_Type\":\"web\"}') | ConvertFrom-Json
     Write-Output "done creating app insight, response: $appInsightCreateResponse"
     Write-Output ""
 
