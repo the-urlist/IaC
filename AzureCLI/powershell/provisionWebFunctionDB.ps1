@@ -131,71 +131,71 @@ function 1_Up {
     Write-Output "In function 1_Up"
     # # This creates the resource group used to house all of the URList application
     # #
-    # Write-Output "Creating resource group $resourceGroupName in region $resourceGroupNameRegion..."
-    # az group create `
-    #     --name $resourceGroupName `
-    #     --location $resourceGroupNameRegion
-    # Write-Output "Done creating resource group"
-    # Write-Output ""
+    Write-Output "Creating resource group $resourceGroupName in region $resourceGroupNameRegion..."
+    az group create `
+        --name $resourceGroupName `
+        --location $resourceGroupNameRegion
+    Write-Output "Done creating resource group"
+    Write-Output ""
 
-    # # This creates a storage account to host our static web site
-    # #
-    # Write-Output "Creating storage account $webStorageAccountName in resource group $resourceGroupName..."
-    # az storage account create `
-    #     --location $webStorageAccountRegion `
-    #     --name $webStorageAccountName `
-    #     --resource-group $resourceGroupName `
-    #     --sku "$webStorageAccountSku" `
-    #     --kind StorageV2
-    # Write-Output "Done creating storage account"
-    # Write-Output ""
+    # This creates a storage account to host our static web site
+    #
+    Write-Output "Creating storage account $webStorageAccountName in resource group $resourceGroupName..."
+    az storage account create `
+        --location $webStorageAccountRegion `
+        --name $webStorageAccountName `
+        --resource-group $resourceGroupName `
+        --sku "$webStorageAccountSku" `
+        --kind StorageV2
+    Write-Output "Done creating storage account"
+    Write-Output ""
 
-    # # This sets the storage account so it can host a static website
-    # #
-    # Write-Ouput "adding storage preview to CLI..."
-    # az extension add `
-    #     --name storage-preview
-    # Write-Output "Done adding storage preview to CLI"
-    # Write-Output "Enabling static website hosting in storage account $webStorageAccountName..."
-    # az storage blob service-properties update `
-    #     --account-name $webStorageAccountName `
-    #     --static-website `
-    #     --404-document $webErrorDocName `
-    #     --index-document $webIndexPage
-    # Write-Output "Done enabling static website hosting in storage account"
-    # Write-Output ""
+    # This sets the storage account so it can host a static website
+    #
+    Write-Ouput "adding storage preview to CLI..."
+    az extension add `
+        --name storage-preview
+    Write-Output "Done adding storage preview to CLI"
+    Write-Output "Enabling static website hosting in storage account $webStorageAccountName..."
+    az storage blob service-properties update `
+        --account-name $webStorageAccountName `
+        --static-website `
+        --404-document $webErrorDocName `
+        --index-document $webIndexPage
+    Write-Output "Done enabling static website hosting in storage account"
+    Write-Output ""
 
-    # # this create a SQL API Cosmos DB account 
-    # #
-    # Write-Outpuot "Creating cosmos db account..."
-    # az cosmosdb create `
-    #     --name $cosmosAccountName `
-    #     --resource-grou $resourceGroupName
-    # Write-Output "Done creating cosmos db account"
-    # Write-Output ""
+    # this create a SQL API Cosmos DB account 
+    #
+    Write-Outpuot "Creating cosmos db account..."
+    az cosmosdb create `
+        --name $cosmosAccountName `
+        --resource-grou $resourceGroupName
+    Write-Output "Done creating cosmos db account"
+    Write-Output ""
 
-    # # This ccreates a database for urlist
-    # #
-    # Write-Output "create the db $cosmosDBName for urlist in cosmos..."
-    # az cosmosdb database create `
-    #     --name $cosmosAccountName `
-    #     --db-name $cosmosDBName `
-    #     --resource-group $resourceGroupName
-    # Write-Output "Done creating db for urlist in cosmos"
-    # Write-Output ""
+    # This ccreates a database for urlist
+    #
+    Write-Output "create the db $cosmosDBName for urlist in cosmos..."
+    az cosmosdb database create `
+        --name $cosmosAccountName `
+        --db-name $cosmosDBName `
+        --resource-group $resourceGroupName
+    Write-Output "Done creating db for urlist in cosmos"
+    Write-Output ""
 
-    # # this creates a fixed-size container and 400 RU/s
-    # #
-    # Write-Output "create a fixed size container collection and 400 RU/s..."
-    #     az cosmosdb collection create `
-    #         --resource-group $resourceGroupName `
-    #         --collection-name $cosmosContainerName `
-    #         --name $cosmosAccountName `
-    #         --db-name $cosmosDBName `
-    #         --throughput $cosmosThroughput `
-    #         --partition-key-path /vanityUrl
-    # Write-Output "done creating container collection"
-    # Write-Output ""
+    # this creates a fixed-size container and 400 RU/s
+    #
+    Write-Output "create a fixed size container collection and 400 RU/s..."
+        az cosmosdb collection create `
+            --resource-group $resourceGroupName `
+            --collection-name $cosmosContainerName `
+            --name $cosmosAccountName `
+            --db-name $cosmosDBName `
+            --throughput $cosmosThroughput `
+            --partition-key-path /vanityUrl
+    Write-Output "done creating container collection"
+    Write-Output ""
 
     # # this creates a storage account for our back end azure function to maintain
     # # state and other info for the function
