@@ -167,7 +167,7 @@ function 1_Up {
 
     # this create a SQL API Cosmos DB account 
     #
-    Write-Outpuot "Creating cosmos db account..."
+    Write-Output "Creating cosmos db account..."
     az cosmosdb create `
         --name $cosmosAccountName `
         --resource-grou $resourceGroupName
@@ -211,7 +211,7 @@ function 1_Up {
 
     # this creates the function app used to host the back end function
     #
-    Write-Outpuot "create the function app for the back end..."
+    Write-Output "create the function app for the back end..."
     az functionapp create `
         --resource-group $resourceGroupName `
         --consumption-plan-location $functionConsumptionPlanRegion `
