@@ -103,7 +103,7 @@ function 1_Up {
             Write-Output "found correct dns entry"
             $foundDnsEntry =$true
             $foundDnsEntryId = $_.id
-            break
+            return
         }
     }
     Write-Output "found dns entry: $foundDnsEntry"
