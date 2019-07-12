@@ -285,7 +285,7 @@ function 2_Up {
         $headers.Add("X-Auth-Email", $cloudFlareEmail)
         $deleteResult = Invoke-RestMethod "https://api.cloudflare.com/client/v4/zones/$cloudFlareZone/pagerules/$ruleId" `
             -Headers $headers `
-            -Method Delete `
+            -Method Delete
         Write-Output "delete response: "
         Write-Output $deleteResult
     }
