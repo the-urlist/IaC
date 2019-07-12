@@ -319,7 +319,7 @@ function 2_Up {
     $headers.Add("X-Auth-Email", $cloudFlareEmail)
     $headers.Add("Content-Type", "application/json")
     $addRuleResponse = Invoke-RestMethod "https://api.cloudflare.com/client/v4/zones/$cloudFlareZone/pagerules" `
-        -Method Put `
+        -Method Post `
         -Body $json `
         -ContentType 'application/json'
     Write-Outpout $addRuleResponse
