@@ -193,7 +193,7 @@ function 2_Up {
         if ($dnsEntryName -eq $nakedDns) {
             $foundDnsEntry =$true
             $foundDnsEntryId = $_.id
-            break
+            return
         }
     }
     Write-Output "found dns entry: $foundDnsEntry"
