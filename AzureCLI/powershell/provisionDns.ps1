@@ -93,11 +93,14 @@ function 1_Up {
 
     # this looks for our dns name, see if it has been set or not
     #
+    Write-Output "looking for correct DNS entry"
     $foundDnsEntry = $false
     $foundDnsEntryId = "x"
     $listDnsResult.result | ForEach-Object {
         $dnsEntryName = $_.name
+        Write-Output "dns entry name: $dnsEntryName"
         if ($dnsEntryName -eq $dnsName) {
+            Write-Output "found correct dns entry"
             $foundDnsEntry =$true
             $foundDnsEntryId = $_.id
             break
