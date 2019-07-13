@@ -301,19 +301,19 @@ function 2_Up {
             constraint = @{
                 operator = 'matches'
                 value = $nakedDns + '/*'
-            } | ConvertTo-Json
+            }
         }
         actions = ,@{
             id = "forwarding_url"
             value = @{
                 url = "https://" + $dnsName + '/$1'
                 status_code = 301
-            } | ConvertTo-Json
+            }
         }
         priority = 1
         status = "active"
     }
-    $json = $postData | ConvertTo-Json
+    $json = $postData | ConvertFrom-Json
     Write-Output "DEBUG json is: "
     Write-Output $json
 
