@@ -301,14 +301,14 @@ function 2_Up {
             constraint = @{
                 operator = 'matches'
                 value = $nakedDns + '/*'
-            }
+            } | ConvertTo-Json
         }
         actions = ,@{
             id = "forwarding_url"
             value = @{
                 url = "https://" + $dnsName + '/$1'
                 status_code = 301
-            }
+            } | ConvertTo-Json
         }
         priority = 1
         status = "active"
@@ -316,7 +316,7 @@ function 2_Up {
     $json = $postData | ConvertTo-Json
     Write-Output "DEBUG json is: "
     Write-Output $json
-    
+
     $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
     $headers.Add("X-Auth-Key", $cloudFlareKey)
     $headers.Add("X-Auth-Email", $cloudFlareEmail)
