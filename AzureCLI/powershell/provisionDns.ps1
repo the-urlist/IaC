@@ -296,9 +296,6 @@ function 2_Up {
     #
     Write-Output "adding apex domain rule..."
     $json = '{"targets":[{"target":"url", "constraint":{"operator":"matches","value":"abelurlist.club/*"}}],"actions":[{"id":"forwarding_url","value": {"url": "https://www.abelurlist.club/$1","status_code": 301}}],"priority":1,"status":"active"}'
-    Write-Output "DEBUG json is: "
-    Write-Output $json
-
     $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
     $headers.Add("X-Auth-Key", $cloudFlareKey)
     $headers.Add("X-Auth-Email", $cloudFlareEmail)
@@ -308,7 +305,7 @@ function 2_Up {
         -Method Post `
         -Body $json `
         -ContentType 'application/json'
-    Write-Outpout $addRuleResponse
+    Write-Output $addRuleResponse
     Write-Output "done adding apex domain rule"
     Write-Output ""
 }
