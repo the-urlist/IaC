@@ -295,34 +295,7 @@ function 2_Up {
     # Add in the apex domain rule
     #
     Write-Output "adding apex domain rule..."
-    $theConstraint =  @{
-        operator = 'matches'
-        value = $nakedDns + '/*'
-    }
-    $singleTarget = @{
-        target = 'url'
-        constraint = $theConstraint
-    }
-    $theTargets = ,$singleTargets
-
-    $theValue =  @{
-        url = "https://" + $dnsName + '/$1'
-        status_code = 301
-    }
-    $singleAction = @{
-        id = "forwarding_url"
-        value = $theValue
-    }
-    $theActions = ,$singleAction
-
-    $postData = @{
-        targets = $theTargets
-        actions = $theActions
-        priority = 1
-        status = "active"
-    }
-
-    $json = $postData | ConvertTo-Json
+    $json = '{"targets":[{"target":"url", "constraint":{"operator":"matches","value":"abelurlist.club/*"}}],"actions":[{"id":"forwarding_url","value": {"url": "https://www.abelurlist.club/$1","status_code": 301}}],"priority":1,"status":"active"}'
     Write-Output "DEBUG json is: "
     Write-Output $json
 
