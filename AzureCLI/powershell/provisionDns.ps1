@@ -319,10 +319,10 @@ function 2_Up {
     $headers.Add("X-Auth-Email", $cloudFlareEmail)
     $headers.Add("Content-Type", "application/json")
     $addRuleResponse = Invoke-RestMethod "https://api.cloudflare.com/client/v4/zones/$cloudFlareZone/pagerules" `
+        -Headers $headers `
         -Method Post `
         -Body $json `
         -ContentType 'application/json'
-        -Headers $headers
     Write-Outpout $addRuleResponse
     Write-Output "done adding apex domain rule"
     Write-Output ""
