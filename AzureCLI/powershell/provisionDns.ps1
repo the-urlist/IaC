@@ -299,17 +299,16 @@ function 2_Up {
         operator = 'matches'
         value = $nakedDns + '/*'
     }
-    $theTargets = ,@{
+    $singleTarget = @{
         target = 'url'
         constraint = $theConstraint
     }
+    $theTargets = ,$singleTargets
 
     $theValue =  @{
         url = "https://" + $dnsName + '/$1'
         status_code = 301
     }
-    
-
     $singleAction = @{
         id = "forwarding_url"
         value = $theValue
@@ -321,7 +320,6 @@ function 2_Up {
         actions = $theActions
         priority = 1
         status = "active"
-        testAction = $singleAction
     }
 
     $json = $postData | ConvertTo-Json
