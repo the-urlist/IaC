@@ -322,7 +322,7 @@ function 2_Up {
         -Method Post `
         -Body $json `
         -ContentType 'application/json'
-        -Headers headers
+        -Headers $headers
     Write-Outpout $addRuleResponse
     Write-Output "done adding apex domain rule"
     Write-Output ""
