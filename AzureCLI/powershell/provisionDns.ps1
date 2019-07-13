@@ -314,6 +314,9 @@ function 2_Up {
         status = "active"
     }
     $json = $postData | ConvertTo-Json
+    Write-Output "DEBUG json is: "
+    Write-Output $json
+    
     $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
     $headers.Add("X-Auth-Key", $cloudFlareKey)
     $headers.Add("X-Auth-Email", $cloudFlareEmail)
