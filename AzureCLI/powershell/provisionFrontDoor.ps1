@@ -82,7 +82,7 @@ function 1_Up {
     az group deployment create `
         --name azuredeployfd `
         --resource-group $resourceGroupName `
-        --template-file "$agentReleaseDirectory/AbelIaCBuild/drop/frontdoorazuredeploy.json" `
+        --template-file "$agentReleaseDirectory/AbelIaCBuild/drop/AzureCLI/powershell/frontdoorazuredeploy.json" `
         --parameters frontDoorName=$frontDoorName `
                     backendPool1Address1="$urlistWebStorageName.z21.web.core.windows.net" `
                     backendPool2Address1="$urlistBackendFunctionName.azurewebsites.net" `
