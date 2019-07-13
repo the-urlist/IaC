@@ -308,16 +308,20 @@ function 2_Up {
         url = "https://" + $dnsName + '/$1'
         status_code = 301
     }
-    $theActions = ,@{
+    
+
+    $singleAction = @{
         id = "forwarding_url"
         value = $theValue
     }
+    $theActions = ,$singleAction
 
     $postData = @{
         targets = $theTargets
         actions = $theActions
         priority = 1
         status = "active"
+        testAction = $singleAction
     }
 
     $json = $postData | ConvertTo-Json
